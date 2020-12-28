@@ -35,8 +35,8 @@ template.innerHTML = `
 <div id="window">
 <div id="windowHeader">window header</div>
 <div id="closeWindowBtn"></div>
-
   Window!
+  <slot id="windowSlot" name="application"></slot>
 </div>
 
 `
@@ -53,16 +53,64 @@ customElements.define('oe222ez-window',
 
     connectedCallback () {
       console.log('A window component added to dom!')
+
+      // Element som används i komponenten
       this.window = this.shadowRoot.querySelector('#window')
       this.windowHeader = this.shadowRoot.querySelector('#windowHeader')
       this.closeElementDiv = this.shadowRoot.querySelector('#closeWindowBtn')
-      
+
+      // sätter default zIndex
+      this.style.zIndex = 1
+      this.style.position = 'absolute'
+
+      // event lyssnare för stäng knappen
       this.closeElementDiv.addEventListener('click', () => {
-        //alert('remove div test')
         this.remove()
       })
 
-     this.moveWindow()
+      // move window metod (gör om en metod för mkt!)
+      this.moveWindow()
+      
+      this.window.addEventListener('click', () => { // flytta funktionen till egen metod!
+        
+        console.log('Nuvarane zindex: ', this.style.zIndex)
+        
+        
+        // skapar en array med alla element i domen
+        const zIndexarray = Array.from(document.querySelectorAll('oe222ez-window'))
+        
+        console.log(zIndexarray)
+        
+        
+        // loopar igenom alla window element och loggar
+        let allZIndex = []
+        for (let i = 0; i < zIndexarray.length; i++) {
+            let zIndexNumber = parseInt(zIndexarray[i].style.zIndex)
+
+            console.log('loop: ', zIndexNumber)
+
+            allZIndex.push(zIndexNumber)
+        }
+
+        
+        var sortedZIndex = allZIndex.sort()
+
+        console.log(sortedZIndex)
+
+        
+        var newZIndexRequired = sortedZIndex[allZIndex.length - 1] + 1
+
+        
+        //console.log('nya zindex för att vara övers: ', newZIndexRequired)
+
+
+        // fixa: öka inte z index om samma element väljs igen!
+
+          this.style.zIndex = newZIndexRequired
+
+        console.log(this.style.zIndex)
+      })
+
 
     }
 
@@ -108,8 +156,6 @@ customElements.define('oe222ez-window',
     disablemoveWindow () {
       document.onmousemove = null
     }
-
-
     
 
   }
