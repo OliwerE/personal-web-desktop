@@ -93,7 +93,9 @@ customElements.define('oe222ez-window',
         }
 
         
-        var sortedZIndex = allZIndex.sort()
+        var sortedZIndex = allZIndex.sort(function(a, b) {
+          return a - b
+        })
 
         console.log(sortedZIndex)
 
