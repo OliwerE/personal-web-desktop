@@ -51,9 +51,14 @@ customElements.define('oe222ez-window',
     }
 
     mouseDownCoord (e) {
-
+      // funktionen används när musen flyttas
+      const changeWindowPosition = (e) => {
+        console.log('changes position!')
+        this.posX2 = e.pageX
+        this.posY2 = e.pageY
+        console.log(this.posX2, this.posY2)
+      }
       // stoppa event onmouseup och onmousemove!
-
 
 
       // när fönstret flyttas:
@@ -65,9 +70,7 @@ customElements.define('oe222ez-window',
       console.log(this.posX1, this.posY1)
       document.onmousemove = changeWindowPosition
 
-      function changeWindowPosition () {
-        console.log('changes position!')
-      }
+
 
     }
 
