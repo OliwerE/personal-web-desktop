@@ -13,6 +13,7 @@ template.innerHTML = `
   width: 300px;
   height: 200px;
   background-color: green;
+  border: 5px solid;
 }
 </style>
 <div id="window">
@@ -51,54 +52,35 @@ customElements.define('oe222ez-window',
     }
 
     mouseDownCoord (e) {
-      console.log(this.window)
       // funktionen används när musen flyttas
       const changeWindowPosition = (e) => {
         console.log('changes position!')
-        this.posX2 = e.clientX
-        this.posY2 = e.clientY
-        console.log(this.posX2, this.posY2)
+        this.posX2 = this.posX1 - e.clientX
+        this.posY2 = this.posY1 - e.clientY
+        this.posX1 = e.clientX
+        this.posY1 = e.clientY
+
+        console.log(this.posX2, this.posY2)  
         
-        // nya koordinater:
-
-        var newX = this.posX1 - this.posX2
-        var newY = this.posY1 - this.posY2
-
-        console.log('new x & y: ', newX, newY)
-
-        /*
-        // nolställer alla gamla positioner (fixa bättre lösning??)
-        this.posX1 = 0
-        this.posX2 = 0
-        this.posY1 = 0
-        this.posY2 = 0
-        */
-
-
-        // ändra div positionen:
-
-        //console.error(this.window) // löst anv: .bind(this)
-        
-        
-        this.window.style.top = (this.window.offsetTop - newY) + 'px'
-        this.window.style.left = (this.window.offsetLeft - newX) + 'px'
-      
+        // ändrar fönster div positionen
+        this.window.style.left = (this.window.offsetLeft - this.posX2) + 'px'
+        this.window.style.top = (this.window.offsetTop - this.posY2) + 'px'
       }
-      // stoppa event onmouseup och onmousemove!
+
+      this.posX1 = e.clientX;
+      this.posY1 = e.clientY;
 
 
-      // när fönstret flyttas:
-      this.posX1 = e.clientX
-      this.posY1 = e.clientY
-      
-      // hantera mouseup!
+      //Hantera mouseup:
 
-      console.log(this.posX1, this.posY1)
+      document.onmouseup = this.disablemoveWindow
+
+      // flyttar elementet:
       document.onmousemove = changeWindowPosition
+    }
 
-
-
-
+    disablemoveWindow () {
+      document.onmousemove = null
     }
 
 
