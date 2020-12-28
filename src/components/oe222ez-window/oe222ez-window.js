@@ -10,13 +10,32 @@ template.innerHTML = `
 <style>
 #window {
   position: absolute;
-  width: 300px;
-  height: 200px;
+  width: 400px;
+  height: 300px;
   background-color: green;
   border: 5px solid;
 }
+
+#windowHeader {
+  float: left;
+  overflow: hidden;
+  background-color: orange;
+  width: 90%;
+  height: 30px;
+}
+#closeWindowBtn {
+  overflow: hidden;
+  background-color: red;
+  height: 30px;
+  width: 10%;
+  text-align: center;
+
+}
 </style>
 <div id="window">
+<div id="windowHeader">window header</div>
+<div id="closeWindowBtn"></div>
+
   Window!
 </div>
 
@@ -35,7 +54,14 @@ customElements.define('oe222ez-window',
     connectedCallback () {
       console.log('A window component added to dom!')
       this.window = this.shadowRoot.querySelector('#window')
+      this.windowHeader = this.shadowRoot.querySelector('#windowHeader')
+      this.closeElementDiv = this.shadowRoot.querySelector('#closeWindowBtn')
       
+      this.closeElementDiv.addEventListener('click', () => {
+        //alert('remove div test')
+        this.remove()
+      })
+
      this.moveWindow()
 
     }
@@ -48,7 +74,7 @@ customElements.define('oe222ez-window',
     }
     
     moveWindow () {
-      this.window.onmousedown = this.mouseDownCoord.bind(this)
+      this.windowHeader.onmousedown = this.mouseDownCoord.bind(this)
     }
 
     mouseDownCoord (e) {
