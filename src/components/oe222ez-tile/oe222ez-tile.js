@@ -20,11 +20,13 @@ template.innerHTML = `
 
 .tile-front {
   background-color: red;
+  background-size: contain;
 }
 
 .tile-back {
   transform: rotateY(180deg);
   background-color: green;
+  background-size: contain;
 }
 
 .tile-front, .tile-back {
