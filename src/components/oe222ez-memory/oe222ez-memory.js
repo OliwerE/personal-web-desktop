@@ -37,8 +37,10 @@ h2 {
 }
 
 </style>
+<div id="memory">
 <div id="memoryContainer"></div> 
 <p id="memoryResult"></p>
+</div>
 `
 
 
@@ -83,20 +85,25 @@ customElements.define('oe222ez-memory',
         if (e.target.id === 'btnSmall') {
           console.log('SMALL')
           this._memorySize = 4
+          //console.error(this._memorySize) // omstart fortf 4
           this.startBoard()
         } else if (e.target.id === 'btnMedium') {
           console.log('MEDIUM')
           this._memorySize = 8
+          //console.error(this._memorySize)
           this.startBoard()
         } else if (e.target.id === 'btnLarge') {
           console.log('LARGE')
           this._memorySize = 16
+          //console.error(this._memorySize)
           this.startBoard()
         } else {
           console.error ('memory start something is wrong with buttons!')
         }
       }
 
+
+      // obs måste ta bort denna eventlyssnare!!
       memoryStartEvent.addEventListener('click', this.memoryStartBtnClicked)
 
 
@@ -138,10 +145,12 @@ customElements.define('oe222ez-memory',
       this.shadowRoot.querySelector('#memoryStart').remove()
 
       this.shadowRoot.appendChild(gameTemplate.content.cloneNode(true))
-
-
+      
       this.createTiles()
       this.eventListener()
+
+
+
     }
 
     createTiles () {
@@ -155,11 +164,11 @@ customElements.define('oe222ez-memory',
 
       // create tiles in an array:
 
-      for (let i = 1; i <= this._memorySize / 2 ; i++) {
-        console.log('creating tile type: ', i + 1)
+      for (let i = 0; i < this._memorySize / 2 ; i++) {
+        console.error('creating tile type: ', i + 1)
 
 
-        for (let a = 1; a <= 2; a++) {
+        for (let a = 0; a < 2; a++) {
         var newElement = document.createElement('oe222ez-tile')
         newElement.className = `oe222ez-tile${i + 1}`
         newElement.id = `oe222ez-tile${i + 1}-${a + 1}`
@@ -170,9 +179,13 @@ customElements.define('oe222ez-memory',
 
       // shuffle nodelist
 
-      const shuffledElements = this._createdElements.sort(() => Math.random() - 0.5) //Shuffle source: https://flaviocopes.com/how-to-shuffle-array-javascript/
+      console.log(this._createdElements)
 
+      const shuffledElements = this._createdElements.sort(() => Math.random() - 0.5) //Shuffle source: https://flaviocopes.com/how-to-shuffle-array-javascript/
       this.buildMemoryBoard(shuffledElements)
+  
+
+
 
     }
 
@@ -318,6 +331,33 @@ customElements.define('oe222ez-memory',
     memoryFinished () {
       this.shadowRoot.querySelector('#memoryResult').innerHTML = `Number of Attempts: ${this.attemptCounter}`
       // skapa reset knapp
+
+      const restartBtn = document.createElement('button')
+      const selector = this.shadowRoot.querySelector('#memory')
+
+      selector.appendChild(restartBtn).setAttribute('id', 'restartMemory')
+
+      this.restartListener = () => {
+        //this.removeListener() // FIXA!
+        
+        // tar bort spelet
+        this.shadowRoot.querySelector('#memory').remove()
+
+        // tar bort eventlyssnare
+        this.removeListener()
+
+
+        //lägger till ny start
+        this.shadowRoot.appendChild(startTemplate.content.cloneNode(true))
+
+        this._createdElements = [] // tar bort skapade element!
+        this.foundPairs = [] // återställer hittade tiles
+        this.connectedCallback() // startar om
+
+
+      }
+
+      restartBtn.addEventListener('click', this.restartListener)
     }
 
   }
