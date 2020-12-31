@@ -36,6 +36,7 @@ template.innerHTML = `
   background-color: pink;
   width: 100%;
   height: 150px;
+  overflow-y:auto;
 }
 
 #sendMessage {
@@ -185,13 +186,20 @@ customElements.define('oe222ez-message-app',
         this.startEventlisteners()
     }
 
-    onMessage (e) { // Obs tillfällig lösning! ta bort efter 20meddelanden!
+    onMessage (e) {
      console.log('onMessage')
      const parseData = JSON.parse(e.data)
      const textElement = document.createElement('p')
      textElement.innerHTML = parseData.data
      const messageContainer = this.shadowRoot.querySelector('#messages')
      messageContainer.appendChild(textElement)
+
+     messageContainer.scrollTop = messageContainer.scrollHeight // visar alltid längst ner i message div
+    
+    if (messageContainer.childNodes.length > 25) {
+      console.log('more than 25 messages! removes first message!')
+      messageContainer.firstChild.remove()
+    }
     }
 
     startEventlisteners () {
