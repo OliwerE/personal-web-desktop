@@ -19,13 +19,13 @@ template.innerHTML = `
 }
 
 .tile-front {
-  background-color: red;
+  background-color: #FDED32;
   background-size: contain;
 }
 
 .tile-back {
   transform: rotateY(180deg);
-  background-color: green;
+  background-color: #FDED32;
   background-size: contain;
 }
 

@@ -164,7 +164,7 @@ customElements.define('oe222ez-memory',
 
       // create tiles in an array:
 
-      const frontImg = './js/components/oe222ez-memory/img/france.png'
+      const frontImg = './js/components/oe222ez-memory/img/question.png'
       const tileImgLinks = ['./js/components/oe222ez-memory/img/france.png', './js/components/oe222ez-memory/img/ireland.png', './js/components/oe222ez-memory/img/spain.png', './js/components/oe222ez-memory/img/sweden.png', './js/components/oe222ez-memory/img/switzerland.png', './js/components/oe222ez-memory/img/united-kingdom.png', './js/components/oe222ez-memory/img/united-states-of-america.png', './js/components/oe222ez-memory/img/china.png']
       tileImgLinks.sort(() => Math.random() - 0.5) //Shuffle source: https://flaviocopes.com/how-to-shuffle-array-javascript/
 
@@ -175,7 +175,7 @@ customElements.define('oe222ez-memory',
         for (let a = 0; a < 2; a++) {
         var newElement = document.createElement('oe222ez-tile')
         newElement.shadowRoot.querySelector('.tile-back').style.backgroundImage = `url('${tileImgLinks[i]}')`
-        //newElement.shadowRoot.querySelector('.tile-front').style.backgroundImage = `url('${frontImg}')`
+        newElement.shadowRoot.querySelector('.tile-front').style.backgroundImage = `url('${frontImg}')`
         newElement.className = `oe222ez-tile${i + 1}`
         newElement.id = `oe222ez-tile${i + 1}-${a + 1}`
         newElement.setAttribute('tabindex', '0')
