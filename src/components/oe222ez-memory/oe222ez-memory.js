@@ -196,8 +196,12 @@ customElements.define('oe222ez-memory',
           this.shadowRoot.querySelector(`#${newDetail.id}`).removeTileContent()
 
           //disables tiles
-          this.shadowRoot.querySelector(`#${this.lastDetail.id}`).setAttribute('disable', 'true')
-          this.shadowRoot.querySelector(`#${newDetail.id}`).setAttribute('disable', 'true')
+          this.shadowRoot.querySelector(`#${this.lastDetail.id}`).setAttribute('disabled', 'true')
+          this.shadowRoot.querySelector(`#${newDetail.id}`).setAttribute('disabled', 'true')
+
+          // tar bort tabindex:
+          this.shadowRoot.querySelector(`#${this.lastDetail.id}`).removeAttribute('tabindex')
+          this.shadowRoot.querySelector(`#${newDetail.id}`).removeAttribute('tabindex')
         })
       
         this.lastDetail = undefined // återställer (tillf. lösn.)
@@ -241,7 +245,6 @@ customElements.define('oe222ez-memory',
 
     memoryFinished () {
       this.shadowRoot.querySelector('#memoryResult').innerHTML = `Number of Attempts: ${this.attemptCounter}`
-
       // skapa reset knapp
     }
 
