@@ -141,22 +141,15 @@ customElements.define('oe222ez-message-app',
     beginWebSocketConnection () {
       this.webSocket = new WebSocket('wss://cscloud6-127.lnu.se/socket/')
 
-      const myJson = {
-        "type": "message",
-        "data" : "test",
-        "username": this.username,
-        "channel": "my, not so secret, channel",
-        "key": "eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd"
-      }
-      
-
       this.webSocket.onopen = (e) => {
         console.log('---onopen----')
         console.log(e)
 
+        /*
         setTimeout(() => {
           this.webSocket.send(JSON.stringify(myJson)) // skickar data!
         }, 2000);
+        */
 
         console.log('---onopen----')
       }
@@ -180,9 +173,9 @@ customElements.define('oe222ez-message-app',
         console.error(e)
         console.log('---onerror----')
       }
-
-
         // this.webSocket.close() stänger anslutning
+
+        this.startEventlisteners()
     }
 
     onMessage (e) { // Obs tillfällig lösning! ta bort efter 20meddelanden!
@@ -192,6 +185,51 @@ customElements.define('oe222ez-message-app',
      textElement.innerHTML = parseData.data
      const messageContainer = this.shadowRoot.querySelector('#messages')
      messageContainer.appendChild(textElement)
+    }
+
+    startEventlisteners () {
+      console.log('----- starts eventlisteners! -----')
+
+
+      this.eventListernerKeypress = (e) => {
+        if(e.key === 'Enter') {
+          console.log('---sends message!---')
+          this.sendMessage()
+        }
+      }
+      const textField = this.shadowRoot.querySelector('#sendMessageText')
+      textField.addEventListener('keypress', this.eventListernerKeypress)
+
+
+      const btn = this.shadowRoot.querySelector('#sendMessageBtn')
+
+      this.eventListernerBtn = () => {
+        console.log('---sends message!---')
+        this.sendMessage()
+      }
+      btn.addEventListener('click', this.eventListernerBtn)
+
+    }
+
+    sendMessage () {
+      console.log('----starts send message ----')
+
+
+      // hämta data
+
+      const input = this.shadowRoot.querySelector('#sendMessageText')
+
+      const data = {
+        "type": "message",
+        "data" : input.value,
+        "username": this.username,
+        "channel": "my, not so secret, channel",
+        "key": "eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd"
+      }
+
+      this.webSocket.send(JSON.stringify(data)) // skickar data!
+
+      // ta bort text från input
     }
     
 
