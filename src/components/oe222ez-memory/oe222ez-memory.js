@@ -5,8 +5,26 @@
  * @version 1.0.0
  */
 
-const template = document.createElement('template')
-template.innerHTML = `
+
+const startTemplate = document.createElement('template')
+startTemplate.innerHTML = `
+ <div id="memoryStart">
+ <div id="memoryStartBtns">
+ <h1>Memory</h1>
+ <button id="btnSmall">Small (2x2)</button>
+ <br>
+ <button id="btnMedium">Medium (4x2)</button>
+ <br>
+ <button id="btnLarge">Large (4x4)</button>
+ </div>
+ <br>
+ <h2>Credits</h2>
+ <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+ </div>
+ `
+
+const gameTemplate = document.createElement('template')
+gameTemplate.innerHTML = `
 <style>
 #memoryContainer {
   background-color: yellow;
@@ -19,28 +37,10 @@ h2 {
 }
 
 </style>
-<div id="memoryStart">
-<div id="memoryStartBtns">
-<h1>Memory</h1>
-<button id="btnSmall">Small (2x2)</button>
-<br>
-<button id="btnMedium">Medium (4x2)</button>
-<br>
-<button id="btnLarge">Large (4x4)</button>
-</div>
-<br>
-<h2>Credits</h2>
-<div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-</div>
-
 <div id="memoryContainer"></div> 
 <p id="memoryResult"></p>
-
-
-<!-- Lägg i template!
-<div id="memoryContainer"></div> 
-<p id="memoryResult"></p>-->
 `
+
 
 customElements.define('oe222ez-memory',
   class extends HTMLElement {
@@ -54,7 +54,7 @@ customElements.define('oe222ez-memory',
       this.foundPairs = [] // array med hittade par
 
       this.attachShadow({ mode: 'open' })
-        .appendChild(template.content.cloneNode(true))
+        .appendChild(startTemplate.content.cloneNode(true))
     }
 
     static get observedAttributes () {
@@ -67,6 +67,13 @@ customElements.define('oe222ez-memory',
       this.createTiles()
       this.eventListener()
       */
+     const startMemoryTemplate = this.shadowRoot.querySelector('#memoryStartTemplate', true)
+
+
+     
+      //const clone = this.shadowRoot.startMemoryTemplate.content.cloneNode(true)
+
+      //this.shadowRoot.appendChild(clone)
 
 
       const memoryStartEvent = this.shadowRoot.querySelector('#memoryStartBtns')
@@ -76,18 +83,15 @@ customElements.define('oe222ez-memory',
         if (e.target.id === 'btnSmall') {
           console.log('SMALL')
           this._memorySize = 4
-          this.createTiles()
-          this.eventListener()
+          this.startBoard()
         } else if (e.target.id === 'btnMedium') {
           console.log('MEDIUM')
           this._memorySize = 8
-          this.createTiles()
-          this.eventListener()
+          this.startBoard()
         } else if (e.target.id === 'btnLarge') {
           console.log('LARGE')
           this._memorySize = 16
-          this.createTiles()
-          this.eventListener()
+          this.startBoard()
         } else {
           console.error ('memory start something is wrong with buttons!')
         }
@@ -124,6 +128,20 @@ customElements.define('oe222ez-memory',
 
     disconnectedCallback () {
       console.log('-----memory disconnectedcallback!-----')
+    }
+
+    startBoard () {
+      console.log('---start board ---')
+
+      // ta bort start template
+
+      this.shadowRoot.querySelector('#memoryStart').remove()
+
+      this.shadowRoot.appendChild(gameTemplate.content.cloneNode(true))
+
+
+      this.createTiles()
+      this.eventListener()
     }
 
     createTiles () {
