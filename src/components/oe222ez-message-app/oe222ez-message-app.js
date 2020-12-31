@@ -43,6 +43,13 @@ template.innerHTML = `
   width: 100%;
   height: 90px;
 }
+
+#sendMessageText {
+  width: 150px;
+  max-width: 240px;
+  height: 50px;
+  max-height: 75px;
+}
 </style>
 <div id="messageAppContainer">
 </div>
@@ -65,8 +72,8 @@ chatInterface.innerHTML = `
   <h1>messages</h1>
   <div id="messages"></div>
   <div id="sendMessage">
-    <input id="sendMessageText" type="text"></input>
-    <input id="sendMessageBtn" type="button" value="Send"></input>
+    <textarea id="sendMessageText" type="text"></textarea>
+    <input id="sendMessageBtn" type="button" value="Send"/>
   </div>
 </div>
 `
@@ -230,6 +237,7 @@ customElements.define('oe222ez-message-app',
       this.webSocket.send(JSON.stringify(data)) // skickar data!
 
       // ta bort text från input
+
     }
     
 
