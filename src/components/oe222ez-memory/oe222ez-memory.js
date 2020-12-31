@@ -14,9 +14,32 @@ template.innerHTML = `
   max-height: 400px
 }
 
+h2 {
+  font-size: 20px;
+}
+
 </style>
-<div id="memoryContainer"></div>
+<div id="memoryStart">
+<div id="memoryStartBtns">
+<h1>Memory</h1>
+<button id="btnSmall">Small (2x2)</button>
+<br>
+<button id="btnMedium">Medium (4x2)</button>
+<br>
+<button id="btnLarge">Large (4x4)</button>
+</div>
+<br>
+<h2>Credits</h2>
+<div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+</div>
+
+<div id="memoryContainer"></div> 
 <p id="memoryResult"></p>
+
+
+<!-- Lägg i template!
+<div id="memoryContainer"></div> 
+<p id="memoryResult"></p>-->
 `
 
 customElements.define('oe222ez-memory',
@@ -40,9 +63,40 @@ customElements.define('oe222ez-memory',
 
     connectedCallback () {
 
+      /* flytta till annan metod efter vald storlek!
       this.createTiles()
-
       this.eventListener()
+      */
+
+
+      const memoryStartEvent = this.shadowRoot.querySelector('#memoryStartBtns')
+
+      this.memoryStartBtnClicked = (e) => {
+        console.log(`test ${e.target.id}`)
+        if (e.target.id === 'btnSmall') {
+          console.log('SMALL')
+          this._memorySize = 4
+          this.createTiles()
+          this.eventListener()
+        } else if (e.target.id === 'btnMedium') {
+          console.log('MEDIUM')
+          this._memorySize = 8
+          this.createTiles()
+          this.eventListener()
+        } else if (e.target.id === 'btnLarge') {
+          console.log('LARGE')
+          this._memorySize = 16
+          this.createTiles()
+          this.eventListener()
+        } else {
+          console.error ('memory start something is wrong with buttons!')
+        }
+      }
+
+      memoryStartEvent.addEventListener('click', this.memoryStartBtnClicked)
+
+
+
 
       /* använd sen!
       const element = document.querySelector('oe222ez-tile')
