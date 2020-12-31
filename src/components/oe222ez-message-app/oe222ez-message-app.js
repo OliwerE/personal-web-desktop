@@ -96,10 +96,11 @@ customElements.define('oe222ez-message-app',
         console.log('starts new username!')
         this.createUserName()
       } else {
+        this.username = nameInLocStorage
         console.log('user rdy!')
         const chat = this.shadowRoot.querySelector('#messageAppContainer')
         chat.appendChild(chatInterface.content.cloneNode(true))
-        //this.beginWebSocketConnection()
+        this.beginWebSocketConnection()
       }
     }
 
@@ -154,7 +155,7 @@ customElements.define('oe222ez-message-app',
         console.log(e)
 
         setTimeout(() => {
-          //webSocket.send(JSON.stringify(myJson)) // skickar data!
+          this.webSocket.send(JSON.stringify(myJson)) // skickar data!
         }, 2000);
 
         console.log('---onopen----')
@@ -164,6 +165,8 @@ customElements.define('oe222ez-message-app',
         console.log('---onmessage----')
         console.log(e)
         console.log('---onmessage----')
+        this.onMessage(e)
+
       }
 
       this.webSocket.onclose = (e) => {
@@ -180,6 +183,15 @@ customElements.define('oe222ez-message-app',
 
 
         // this.webSocket.close() stänger anslutning
+    }
+
+    onMessage (e) { // Obs tillfällig lösning! ta bort efter 20meddelanden!
+     console.log('onMessage')
+     const parseData = JSON.parse(e.data)
+     const textElement = document.createElement('p')
+     textElement.innerHTML = parseData.data
+     const messageContainer = this.shadowRoot.querySelector('#messages')
+     messageContainer.appendChild(textElement)
     }
     
 
