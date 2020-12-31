@@ -363,6 +363,7 @@ customElements.define('oe222ez-memory',
 
         this._createdElements = [] // tar bort skapade element!
         this.foundPairs = [] // återställer hittade tiles
+        this.attemptCounter = 0
         this.connectedCallback() // startar om
 
 

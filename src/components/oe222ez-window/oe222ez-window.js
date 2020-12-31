@@ -10,8 +10,8 @@ template.innerHTML = `
 <style>
 #window {
   position: absolute;
-  width: 400px;
-  height: 300px;
+  min-width: 400px;
+  min-height: 300px;
   background-color: green;
   border: 5px solid;
 }

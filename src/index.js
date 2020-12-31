@@ -8,6 +8,7 @@
 import './components/oe222ez-window/index'
 import './components/oe222ez-tile/index'
 import './components/oe222ez-memory/index'
+import './components/oe222ez-message-app'
 
 console.log('TODO: Start working on the assignment')
 
