@@ -47,8 +47,14 @@ customElements.define('oe222ez-window',
     constructor () {
       super()
 
+      this.windowElement = undefined
+
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
+    }
+
+    static get observedAttributes () {
+      return ['windowElement']
     }
 
     connectedCallback () {
@@ -117,6 +123,11 @@ customElements.define('oe222ez-window',
     }
 
     attributeChangedCallback (name, oldValue, newValue) {
+      if (name === 'windowElement') { // kontrollera att detta är ett element:  <namn>
+        console.log('window edit!')
+        this.windowElement = newValue
+        this.addElementToWindow()
+      }
 
     }
 
@@ -128,9 +139,11 @@ customElements.define('oe222ez-window',
     }
 
     mouseDownCoord (e) {
-      // funktionen används när musen flyttas
+      // funktionen används när musen flyttas'
       const changeWindowPosition = (e) => {
         console.log('changes position!')
+        e.preventDefault() // stoppar markering av text i andra fönster
+
         this.posX2 = this.posX1 - e.clientX
         this.posY2 = this.posY1 - e.clientY
         this.posX1 = e.clientX
@@ -157,6 +170,13 @@ customElements.define('oe222ez-window',
 
     disablemoveWindow () {
       document.onmousemove = null
+    }
+
+    addElementToWindow () {
+      const element = document.createElement(this.windowElement)
+      const slot = this.shadowRoot.querySelector('#window')
+
+      slot.appendChild(element)
     }
     
 
