@@ -26,6 +26,23 @@ template.innerHTML = `
   width: 100%;
   align-self: center;
 }
+#chatInterface {
+  background-color: yellow;
+  width: 100%;
+  height: 100%;
+}
+
+#messages {
+  background-color: pink;
+  width: 100%;
+  height: 150px;
+}
+
+#sendMessage {
+  background-color: green;
+  width: 100%;
+  height: 90px;
+}
 </style>
 <div id="messageAppContainer">
 </div>
@@ -38,6 +55,18 @@ createUserName.innerHTML = `
     <h1>Create Username</h1>
     <input id="createNameText" type="text"></input>
     <input id="createNameBtn" type="button" value="Submit"></input>
+  </div>
+</div>
+`
+
+const chatInterface = document.createElement('template')
+chatInterface.innerHTML = `
+<div id="chatInterface">
+  <h1>messages</h1>
+  <div id="messages"></div>
+  <div id="sendMessage">
+    <input id="sendMessageText" type="text"></input>
+    <input id="sendMessageBtn" type="button" value="Send"></input>
   </div>
 </div>
 `
@@ -63,11 +92,13 @@ customElements.define('oe222ez-message-app',
 
       const nameInLocStorage = localStorage.getItem('oe222ez-message-app')
 
-      if (nameInLocStorage === null) {
+      if (nameInLocStorage === null || nameInLocStorage === '') {
         console.log('starts new username!')
         this.createUserName()
       } else {
         console.log('user rdy!')
+        const chat = this.shadowRoot.querySelector('#messageAppContainer')
+        chat.appendChild(chatInterface.content.cloneNode(true))
         //this.beginWebSocketConnection()
       }
     }
