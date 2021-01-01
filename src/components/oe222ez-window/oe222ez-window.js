@@ -141,7 +141,7 @@ customElements.define('oe222ez-window',
     mouseDownCoord (e) {
       // funktionen används när musen flyttas'
       const changeWindowPosition = (e) => {
-        console.log('changes position!')
+        //console.log('changes position!')
         e.preventDefault() // stoppar markering av text i andra fönster
 
         this.posX2 = this.posX1 - e.clientX
@@ -149,11 +149,11 @@ customElements.define('oe222ez-window',
         this.posX1 = e.clientX
         this.posY1 = e.clientY
 
-        console.log(this.posX2, this.posY2)  
-        
+        //console.log(this.posX2, this.posY2)
+
         // ändrar fönster div positionen
-        this.window.style.left = (this.window.offsetLeft - this.posX2) + 'px'
-        this.window.style.top = (this.window.offsetTop - this.posY2) + 'px'
+        this.window.style.left = Math.max(this.parentNode.offsetLeft, Math.min((this.window.offsetLeft - this.posX2), (this.parentNode.offsetWidth - this.window.offsetWidth )))  + 'px'
+        this.window.style.top = Math.max(this.parentNode.offsetTop, Math.min((this.window.offsetTop - this.posY2), (this.parentNode.offsetHeight - this.window.offsetHeight ))) + 'px'
       }
 
       this.posX1 = e.clientX;

@@ -17,17 +17,17 @@ console.log('TODO: Start working on the assignment')
 const memoryWindow = () => {
 //fönster
 const element = document.createElement('oe222ez-window')
-const select = document.querySelector('body')
+const select = document.querySelector('#windowContainer')
 select.appendChild(element)
 
 //memory
 
 
 const element2 = document.createElement('oe222ez-memory')
-const select2 = document.querySelector('body').lastChild.shadowRoot.querySelector('#window')
+const select2 = document.querySelector('#windowContainer').lastChild.shadowRoot.querySelector('#window')
 select2.appendChild(element2)
 
 }
 document.querySelector('#memoryWindow').addEventListener('click', memoryWindow)
 
-
+//memoryWindow()
