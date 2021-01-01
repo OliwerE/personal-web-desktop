@@ -12,7 +12,7 @@ template.innerHTML = `
   position: absolute;
   min-width: 400px;
   min-height: 300px;
-  background-color: green;
+  background-color: #ffffff;
   border: 5px solid;
 }
 
@@ -35,7 +35,6 @@ template.innerHTML = `
 <div id="window">
 <div id="windowHeader">window header</div>
 <div id="closeWindowBtn"></div>
-  Window!
   <slot id="windowSlot" name="application"></slot>
 </div>
 

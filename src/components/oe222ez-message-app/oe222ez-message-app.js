@@ -8,17 +8,18 @@
 const template = document.createElement('template')
 template.innerHTML = `
 <style>
+h1 {
+  text-align: center;
+}
 #messageAppContainer {
-    width: 300px;
+    width: 100%;
     height: 300px;
-    background-color: lightblue;
 }
 
 #createUserNameContainer {
   width: 100%;
   height: 100%;
   text-align: center;
-  background-color: orange;
 }
 
 #verticalAlign {
@@ -27,29 +28,31 @@ template.innerHTML = `
   align-self: center;
 }
 #chatInterface {
-  background-color: yellow;
   width: 100%;
   height: 100%;
 }
 
 #messages {
-  background-color: pink;
+  background-color: lightgray;
   width: 100%;
   height: 150px;
   overflow-y:auto;
 }
 
-#sendMessage {
-  background-color: green;
-  width: 100%;
-  height: 90px;
+#sendMessageBtn {
+  width: 90px;
+  height: 30px;
+  border-radius: 10px;
 }
 
 #sendMessageText {
-  width: 150px;
-  max-width: 240px;
+  width: 250px;
+  max-width: 290px;
   height: 50px;
-  max-height: 75px;
+  max-height: 65px;
+  margin-top: 10px;
+  margin-left: 10px;
+  border-radius: 10px;
 }
 </style>
 <div id="messageAppContainer">

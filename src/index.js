@@ -30,4 +30,20 @@ select2.appendChild(element2)
 }
 document.querySelector('#memoryWindow').addEventListener('click', memoryWindow)
 
-//memoryWindow()
+
+
+// fönster komponent med message (test)
+const messageWindow = () => {
+    //fönster
+    const element = document.createElement('oe222ez-window')
+    const select = document.querySelector('#windowContainer')
+    select.appendChild(element)
+    
+    //message
+    const element2 = document.createElement('oe222ez-message-app')
+    const select2 = document.querySelector('#windowContainer').lastChild.shadowRoot.querySelector('#window')
+    select2.appendChild(element2)
+    
+    }
+    document.querySelector('#messageWindow').addEventListener('click', messageWindow)
+
