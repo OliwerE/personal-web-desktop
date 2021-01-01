@@ -132,6 +132,17 @@ customElements.define('oe222ez-message-app',
         chat.appendChild(chatInterface.content.cloneNode(true))
         this.beginWebSocketConnection()
       }
+
+
+      
+      const closeConnection = this.shadowRoot.host.parentNode.parentNode.host //egna window elementet stängs!
+      console.error(closeConnection)
+      closeConnection.addEventListener('oe222ez-window-close', (e) => {
+        console.log('message app ser att  window stänger!', e.detail.msg)
+        this.webSocket.close()
+      })
+      
+
     }
 
     attributeChangedCallback (name, oldValue, newValue) {

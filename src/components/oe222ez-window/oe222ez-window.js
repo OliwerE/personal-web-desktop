@@ -71,6 +71,11 @@ customElements.define('oe222ez-window',
       // event lyssnare för stäng knappen
       this.closeElementDiv.addEventListener('click', () => {
         this.remove()
+
+        this.dispatchEvent(new CustomEvent('oe222ez-window-close', {
+          bubbles: true, // behövs bubbles??
+          detail: { msg: 'fönster stänger!'}
+        }))
       })
 
       // move window metod (gör om en metod för mkt!)
