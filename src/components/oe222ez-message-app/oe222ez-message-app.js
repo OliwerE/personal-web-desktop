@@ -47,12 +47,26 @@ h1 {
 
 #sendMessageText {
   width: 250px;
-  max-width: 290px;
+  max-width: 280px;
   height: 50px;
-  max-height: 65px;
+  max-height: 70px;
   margin-top: 10px;
   margin-left: 10px;
   border-radius: 10px;
+}
+
+#textAreaDiv {
+  float: left;
+  width: 300px;
+  height: 100%;
+
+}
+
+#sendBtnDiv {
+  float: left;
+  width: 100px;
+  height: 100%;
+  margin-top: 30px;
 }
 </style>
 <div id="messageAppContainer">
@@ -64,8 +78,9 @@ createUserName.innerHTML = `
 <div id="createUserNameContainer">
   <div id="verticalAlign">
     <h1>Create Username</h1>
-    <input id="createNameText" type="text"></input>
-    <input id="createNameBtn" type="button" value="Submit"></input>
+      <input id="createNameText" type="text"></input>
+      <input id="createNameBtn" type="button" value="Submit"></input>
+    </div>
   </div>
 </div>
 `
@@ -76,8 +91,12 @@ chatInterface.innerHTML = `
   <h1>messages</h1>
   <div id="messages"></div>
   <div id="sendMessage">
+  <div id="textAreaDiv">
     <textarea id="sendMessageText" type="text"></textarea>
-    <input id="sendMessageBtn" type="button" value="Send"/>
+  </div>
+  <div id="sendBtnDiv">
+      <input id="sendMessageBtn" type="button" value="Send"/>
+  </div>
   </div>
 </div>
 `
