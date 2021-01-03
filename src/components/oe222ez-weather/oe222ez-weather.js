@@ -80,14 +80,25 @@ customElements.define('oe222ez-weather',
 
     searchCity () {
       this.createLink()
+      this.getWeather()
+      console.log('--- inte slut? ---')
     }
 
     createLink () {
       const linkPart1 = 'https://api.openweathermap.org/data/2.5/weather?q='
       const linkPart2 = this.shadowRoot.querySelector('#citySearch').value
-      const linkPart3 = '&appid=4f844b589b158cb6c66f6c933b7c767c'
+      const linkPart3 = '&appid=4f844b589b158cb6c66f6c933b7c767c' // använda attribut för api nyckel?
 
       this.weatherLink = linkPart1.concat(linkPart2 + linkPart3)
+    }
+
+    async getWeather () {
+      await window.fetch(this.weatherLink).then((response) => {
+        console.log(response)
+        return response.json()
+      }).then((jsonResponse) => {
+        console.log(jsonResponse)
+      })
     }
 
 
