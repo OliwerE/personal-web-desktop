@@ -197,7 +197,7 @@ customElements.define('oe222ez-weather',
         
         var text
         if (i < wantedMainParameters.length - 1) { // om det är någon av temperaturerna
-          parameterResponse = parameterResponse - 272.15 + ' C'
+          parameterResponse = (parameterResponse - 273.15).toFixed(0) + ' C'
           text = parameter.replace('_', ' ') + ': ' + parameterResponse
         } else { // Om det är humidity
           text = `Humidity: ${parameterResponse} %`
