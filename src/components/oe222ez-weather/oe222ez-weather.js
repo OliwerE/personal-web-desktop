@@ -12,7 +12,7 @@ template.innerHTML = `
   display:block;
   background-color: green;
   width: 100%;
-  height: 270px;
+  min-height: 270px;
 }
 h1 {
   text-align: center;
@@ -38,8 +38,8 @@ h1 {
 /*  Weather Response  */
 
 #weatherResponse {
-background-color: green;
-height: 270px;
+  background-color: green;
+  min-height: 270px;
 }
 
 </style>
@@ -62,7 +62,8 @@ height: 270px;
 const weatherData = document.createElement('template')
 weatherData.innerHTML = `
 <div id="weatherResponse">
-  TEST
+  <h2 id="responseCity"></h2>
+
 </div>
 `
 
@@ -176,8 +177,39 @@ customElements.define('oe222ez-weather',
 
     showResponse () {
       this.shadowRoot.querySelector('#startMenu').remove() // removes start input
-
       this.shadowRoot.appendChild(weatherData.content.cloneNode(true))
+      
+      this.shadowRoot.querySelector('#responseCity').innerHTML = this.lastWeatherResponse.name // platsens namn
+
+      const responseContainer = this.shadowRoot.querySelector('#weatherResponse')
+
+
+
+      // desc:
+      this.createTextElement(this.lastWeatherResponse.weather[0].description, responseContainer)
+
+
+      // wanted main data
+      const wantedMainParameters = ['temp', 'feels_like', 'temp_min', 'temp_max', 'humidity']
+      for (let i = 0; i < wantedMainParameters.length; i++) {
+        var parameter = wantedMainParameters[i]
+
+        var parameterResponse = this.lastWeatherResponse.main[parameter] // debug
+
+        this.createTextElement(parameterResponse, responseContainer)
+      }
+
+      // windspeed: 
+      const windspeed = `Windspeed: ${this.lastWeatherResponse.wind.speed} m/s`
+      this.createTextElement(windspeed, responseContainer)
+
+    }
+
+    createTextElement (text, container) { // skapar respons text elementen!
+      const element = document.createElement('p')
+      const textNode = document.createTextNode(text)
+      element.appendChild(textNode)
+      container.appendChild(element)
     }
 
 
