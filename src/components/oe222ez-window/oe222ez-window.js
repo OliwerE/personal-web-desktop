@@ -81,7 +81,7 @@ customElements.define('oe222ez-window',
       // move window metod (gör om en metod för mkt!)
       this.moveWindow()
       
-      this.window.addEventListener('click', () => { // flytta funktionen till egen metod!
+      this.window.addEventListener('mousedown', () => { // flytta funktionen till egen metod!
         
         console.log('Nuvarane zindex: ', this.style.zIndex)
         
