@@ -18,11 +18,28 @@ h1 {
   text-align: center;
   margin: 0;
 }
+#getCityWeatherContainer {
+  background-color: pink;
+  display:flex;
+  justify-content: center;
+  height: 150px;
+}
+#inputContainer {
+  display: inline-block;
+  align-self: center
+}
 </style>
 <div id="startMenu">
 <h1>Weather</h1>
 <div id="getCityWeatherContainer">
-<input id="city" type="text" placeholder="City"/>
+  <div id="inputContainer">
+    <h2>Enter a location</h2>
+    <input id="citySearch" type="text" placeholder="City"/>
+    <input id="cityBtn" type="button" value="Search"/>
+  <div>
+</div>
+<div id="credits">
+  <p>Powered by <a href="https://openweathermap.org/" target="_blank">openweathermap.org</a></p>
 </div>
 </div>
 `
@@ -43,6 +60,12 @@ customElements.define('oe222ez-weather',
     }
 
     connectedCallback () {
+      this.startClick = () => {
+        this.searchCity()
+      }
+      this.shadowRoot.querySelector('#cityBtn').addEventListener('click', this.startClick)
+
+      // lägg till enter event lyssnare!
 
     }
 
@@ -53,6 +76,18 @@ customElements.define('oe222ez-weather',
 
     disconnectedCallback () {
 
+    }
+
+    searchCity () {
+      this.createLink()
+    }
+
+    createLink () {
+      const linkPart1 = 'https://api.openweathermap.org/data/2.5/weather?q='
+      const linkPart2 = this.shadowRoot.querySelector('#citySearch').value
+      const linkPart3 = '&appid=4f844b589b158cb6c66f6c933b7c767c'
+
+      this.weatherLink = linkPart1.concat(linkPart2 + linkPart3)
     }
 
 
