@@ -28,6 +28,20 @@ h1 {
   display: inline-block;
   align-self: center
 }
+
+#response {
+  background-color: yellow;
+  height: 19px;
+  width: 226px;
+}
+
+/*  Weather Response  */
+
+#weatherResponse {
+background-color: green;
+height: 270px;
+}
+
 </style>
 <div id="startMenu">
 <h1>Weather</h1>
@@ -36,11 +50,19 @@ h1 {
     <h2>Enter a location</h2>
     <input id="citySearch" type="text" placeholder="City"/>
     <input id="cityBtn" type="button" value="Search"/>
+    <p id="response"></p>
   <div>
 </div>
 <div id="credits">
   <p>Powered by <a href="https://openweathermap.org/" target="_blank">openweathermap.org</a></p>
 </div>
+</div>
+`
+
+const weatherData = document.createElement('template')
+weatherData.innerHTML = `
+<div id="weatherResponse">
+  TEST
 </div>
 `
 
@@ -67,6 +89,11 @@ customElements.define('oe222ez-weather',
 
       // lägg till enter event lyssnare!
 
+
+
+      
+    //this.showResponse() //temp
+
     }
 
     attributeChangedCallback (name, oldValue, newValue) {
@@ -81,7 +108,6 @@ customElements.define('oe222ez-weather',
     searchCity () {
       this.createLink()
       this.getWeather()
-      console.log('--- inte slut? ---')
     }
 
     createLink () {
@@ -93,12 +119,65 @@ customElements.define('oe222ez-weather',
     }
 
     async getWeather () {
-      await window.fetch(this.weatherLink).then((response) => {
-        console.log(response)
+      await window.fetch(this.weatherLink).then((response) => { // 401:an stoppas redan här!
+        //console.log(response)
         return response.json()
       }).then((jsonResponse) => {
-        console.log(jsonResponse)
+        //console.log(jsonResponse)
+        this.lastWeatherResponse = jsonResponse
+        this.readResponseCode()
+      }).catch((err) => {
+        console.error(err)
       })
+    }
+
+    readResponseCode () {
+      //alert(typeof this.lastWeatherResponse.cod)
+
+      //alert(this.lastWeatherResponse.cod)
+
+      const responseElement = this.shadowRoot.querySelector('#response')
+      var textToUser
+      if (this.lastWeatherResponse.cod === 200) {
+        this.showResponse() // visar resultat
+      } else if (this.lastWeatherResponse.cod === 401) { // denna ska vara number! Something is wrong with the api key
+        textToUser = `Error: ${this.lastWeatherResponse.cod}`
+        console.error('oe222ez-weather: Something is wrong with the api key')
+
+        // meddelande till användaren
+        responseElement.innerHTML = textToUser
+
+
+      } else if (this.lastWeatherResponse.cod === '404') { // Requested city not found or an error with the API request
+        textToUser = `Requested city not found err: ${this.lastWeatherResponse.cod}`
+        console.error('oe222ez-weather: ', textToUser, ' or an error with the API request!')
+        // användaren gjort fel (kan även vara fel på api request)
+
+        responseElement.innerHTML = textToUser
+
+
+      } else if (this.lastWeatherResponse.cod === '429') { // inte testad! testa innan inlämning!
+        textToUser = 'Ran out of requests! (max 60/h)'
+        console.error('oe222ez-weather: ', textToUser)
+        
+
+        // meddelande till användaren
+        responseElement.innerHTML = textToUser
+
+      } else {
+        textToUser = 'Something went wrong!'
+        console.error('oe222ez-weather: ', textToUser, ' Got an unknown response code: ', this.lastWeatherResponse.cod)
+
+        // meddelande till användaren
+
+      }
+    }
+    
+
+    showResponse () {
+      this.shadowRoot.querySelector('#startMenu').remove() // removes start input
+
+      this.shadowRoot.appendChild(weatherData.content.cloneNode(true))
     }
 
 
