@@ -193,11 +193,20 @@ customElements.define('oe222ez-weather',
       const wantedMainParameters = ['temp', 'feels_like', 'temp_min', 'temp_max', 'humidity']
       for (let i = 0; i < wantedMainParameters.length; i++) {
         var parameter = wantedMainParameters[i]
-
         var parameterResponse = this.lastWeatherResponse.main[parameter] // debug
+        
+        var text
+        if (i < wantedMainParameters.length - 1) { // om det är någon av temperaturerna
+          parameterResponse = parameterResponse - 272.15 + ' C'
+          text = parameter.replace('_', ' ') + ': ' + parameterResponse
+        } else { // Om det är humidity
+          text = `Humidity: ${parameterResponse} %`
+        }
 
-        this.createTextElement(parameterResponse, responseContainer)
+
+        this.createTextElement(text, responseContainer)
       }
+
 
       // windspeed: 
       const windspeed = `Windspeed: ${this.lastWeatherResponse.wind.speed} m/s`
