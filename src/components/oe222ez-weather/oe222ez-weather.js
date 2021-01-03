@@ -18,18 +18,19 @@ h1 {
   margin: 0;
 }
 #getCityWeatherContainer {
-  display:flex;
-  justify-content: center;
+  /*display:flex;
+  justify-content: center;*/
   height: 150px;
 }
 #inputContainer {
   display: inline-block;
-  align-self: center
+  /*align-self: center*/
 }
 
 #response {
   height: 19px;
   width: 226px;
+  color: red;
 }
 
 /*  Weather Response  */
@@ -38,21 +39,28 @@ h1 {
   min-height: 270px;
 }
 
+#credits p {
+  display: block;
+  font-size: 14px;
+}
+
 </style>
 <div id="startMenu">
 <h1>Weather</h1>
 <div id="getCityWeatherContainer">
   <div id="inputContainer">
     <h2>Enter a location</h2>
-    <input id="citySearch" type="text" placeholder="City"/>
+    <input id="citySearch" type="text" placeholder="city, county or country"/>
     <input id="cityBtn" type="button" value="Search"/>
     <p id="response"></p>
   <div>
 </div>
 <div id="credits">
-  <p>Powered by <a href="https://openweathermap.org/" target="_blank">openweathermap.org</a></p>
+  <p> "<a href="https://openweathermap.org/api" target="_blank">Weather API</a>" by <a href="https://openweathermap.org/" target="_blank">OpenWeather (TM)</a> is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a></p>
 </div>
 </div>
+
+
 `
 
 const weatherData = document.createElement('template')
@@ -138,7 +146,7 @@ customElements.define('oe222ez-weather',
       if (this.lastWeatherResponse.cod === 200) {
         this.showResponse() // visar resultat
       } else if (this.lastWeatherResponse.cod === 401) { // denna ska vara number! Something is wrong with the api key
-        textToUser = `Error: ${this.lastWeatherResponse.cod}`
+        textToUser = `Request error: ${this.lastWeatherResponse.cod}`
         console.error('oe222ez-weather: Something is wrong with the api key')
 
         // meddelande till användaren
@@ -146,7 +154,7 @@ customElements.define('oe222ez-weather',
 
 
       } else if (this.lastWeatherResponse.cod === '404') { // Requested city not found or an error with the API request
-        textToUser = `Requested city not found err: ${this.lastWeatherResponse.cod}`
+        textToUser = `Location not found err: ${this.lastWeatherResponse.cod}`
         console.error('oe222ez-weather: ', textToUser, ' or an error with the API request!')
         // användaren gjort fel (kan även vara fel på api request)
 
@@ -154,15 +162,15 @@ customElements.define('oe222ez-weather',
 
 
       } else if (this.lastWeatherResponse.cod === '429') { // inte testad! testa innan inlämning!
-        textToUser = 'Ran out of requests! (max 60/h)'
-        console.error('oe222ez-weather: ', textToUser)
+        textToUser = `Try again later! Err: ${this.lastWeatherResponse.cod}`
+        console.error('oe222ez-weather: Ran out of requests! max 60/h', this.lastWeatherResponse.cod)
         
 
         // meddelande till användaren
         responseElement.innerHTML = textToUser
 
       } else {
-        textToUser = 'Something went wrong!'
+        textToUser = `Something went wrong! ${this.lastWeatherResponse.cod}`
         console.error('oe222ez-weather: ', textToUser, ' Got an unknown response code: ', this.lastWeatherResponse.cod)
 
         // meddelande till användaren
