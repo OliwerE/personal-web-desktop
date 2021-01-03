@@ -10,7 +10,6 @@ template.innerHTML = `
 <style>
 #startMenu {
   display:block;
-  background-color: green;
   width: 100%;
   min-height: 270px;
 }
@@ -19,7 +18,6 @@ h1 {
   margin: 0;
 }
 #getCityWeatherContainer {
-  background-color: pink;
   display:flex;
   justify-content: center;
   height: 150px;
@@ -30,7 +28,6 @@ h1 {
 }
 
 #response {
-  background-color: yellow;
   height: 19px;
   width: 226px;
 }
@@ -38,7 +35,6 @@ h1 {
 /*  Weather Response  */
 
 #weatherResponse {
-  background-color: green;
   min-height: 270px;
 }
 
@@ -63,7 +59,7 @@ const weatherData = document.createElement('template')
 weatherData.innerHTML = `
 <div id="weatherResponse">
   <h2 id="responseCity"></h2>
-
+  <img id="weatherIcon" alt="A weather icon"/>
 </div>
 `
 
@@ -188,6 +184,10 @@ customElements.define('oe222ez-weather',
       // desc:
       this.createTextElement(this.lastWeatherResponse.weather[0].description, responseContainer)
 
+
+      //img:
+      const iconSrc = `https://openweathermap.org/img/wn/${this.lastWeatherResponse.weather[0].icon}.png`
+      this.shadowRoot.querySelector('#weatherIcon').setAttribute('src', iconSrc)
 
       // wanted main data
       const wantedMainParameters = ['temp', 'feels_like', 'temp_min', 'temp_max', 'humidity']
