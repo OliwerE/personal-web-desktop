@@ -105,6 +105,10 @@ h3 {
 }
 
 </style>
+`
+
+const startTemplate = document.createElement('template')
+startTemplate.innerHTML = `
 <div id="startMenu">
 <h1>Weather</h1>
 <div id="getCityWeatherContainer">
@@ -119,8 +123,6 @@ h3 {
   <p> "<a href="https://openweathermap.org/api" target="_blank">Weather API</a>" by <a href="https://openweathermap.org/" target="_blank">OpenWeather (TM)</a> is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a></p>
 </div>
 </div>
-
-
 `
 
 const weatherData = document.createElement('template')
@@ -149,12 +151,6 @@ weatherData.innerHTML = `
   <div id="returnBtnContainer">
   <input id="returnBtn" type="button" value="Back"/>
   </div>
-
-
-
-  <!--
-  <h2 id="responseCity"></h2>
-  <img id="weatherIcon" alt="A weather icon"/>-->
 </div>
 `
 
@@ -174,6 +170,10 @@ customElements.define('oe222ez-weather',
     }
 
     connectedCallback () {
+      // lägger till start menu div
+      this.shadowRoot.appendChild(startTemplate.content.cloneNode(true))
+
+
       this.startClick = () => {
         // ta bort eventlistener
         this.searchCity()
@@ -201,7 +201,15 @@ customElements.define('oe222ez-weather',
     }
 
     disconnectedCallback () {
-
+      if (this.shadowRoot.querySelector('#cityBtn') !== null) {
+        this.shadowRoot.querySelector('#cityBtn').removeEventListener('click', this.startClick)
+      }
+      if (this.shadowRoot.querySelector('#citySearch') !== null) {
+        this.shadowRoot.querySelector('#citySearch').removeEventListener('keypress', this.startEnter)
+      }
+      if (this.shadowRoot.querySelector('#returnBtn') !== null) {
+        this.shadowRoot.querySelector('#returnBtn').removeEventListener('click', this.returnButtonEvent)
+      }
     }
 
     searchCity () {
@@ -274,8 +282,24 @@ customElements.define('oe222ez-weather',
     
 
     showResponse () {
+      //remove start event listeners
+      this.shadowRoot.querySelector('#cityBtn').removeEventListener('click', this.startClick)
+      this.shadowRoot.querySelector('#citySearch').removeEventListener('keypress', this.startEnter)
+
+
       this.shadowRoot.querySelector('#startMenu').remove() // removes start input
       this.shadowRoot.appendChild(weatherData.content.cloneNode(true))
+
+
+      // add back button event listener
+      this.returnButtonEvent = () => {
+        this.shadowRoot.querySelector('#returnBtn').removeEventListener('click', this.returnButtonEvent)
+        this.restart()
+      }
+
+      this.shadowRoot.querySelector('#returnBtn').addEventListener('click', this.returnButtonEvent)
+
+
       
       this.shadowRoot.querySelector('#responseCity').innerHTML = this.lastWeatherResponse.name // platsens namn
 
@@ -332,6 +356,11 @@ customElements.define('oe222ez-weather',
       const textNode = document.createTextNode(text)
       element.appendChild(textNode)
       container.appendChild(element)
+    }
+
+    restart () { // startar om väder
+      this.shadowRoot.querySelector('#weatherResponse').remove()
+      this.connectedCallback()
     }
 
 
