@@ -19,13 +19,13 @@ h1 {
   margin: 0;
 }
 #getCityWeatherContainer {
-  /*display:flex;
-  justify-content: center;*/
+  display:flex;
+  justify-content: center;
   height: 150px;
 }
 #inputContainer {
   display: inline-block;
-  /*align-self: center*/
+  align-self: center
 }
 
 #response {
@@ -100,7 +100,7 @@ h3 {
   height: 100%;
 }
 
-#credits p {
+#credits {
   display: block;
   font-size: 14px;
 }
@@ -118,10 +118,7 @@ startTemplate.innerHTML = `
     <input class="listenEnter" id="citySearch" type="text" placeholder="city, county or country"/>
     <input class="listenEnter" id="cityBtn" type="button" value="Search"/>
     <p id="response"></p>
-  <div>
-</div>
-<div id="credits">
-  <p> "<a href="https://openweathermap.org/api" target="_blank">Weather API</a>" by <a href="https://openweathermap.org/" target="_blank">OpenWeather (TM)</a> is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a></p>
+    <p id="credits">"<a href="https://openweathermap.org/api" target="_blank">Weather API</a>" by <a href="https://openweathermap.org/" target="_blank">OpenWeather (TM)</a><br> is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a></p>
 </div>
 </div>
 `
