@@ -81,8 +81,7 @@ customElements.define('oe222ez-window',
       // move window metod (gör om en metod för mkt!)
       this.moveWindow()
       
-      this.window.addEventListener('mousedown', () => { // flytta funktionen till egen metod!
-        
+      this.window.addEventListener('mousedown', (e) => { // flytta funktionen till egen metod!
         console.log('Nuvarane zindex: ', this.style.zIndex)
         
         
@@ -159,7 +158,6 @@ customElements.define('oe222ez-window',
         this.window.style.left = Math.max(this.parentNode.offsetLeft, Math.min((this.window.offsetLeft - this.posX2), (this.parentNode.offsetWidth - this.window.offsetWidth )))  + 'px'
         this.window.style.top = Math.max(this.parentNode.offsetTop, Math.min((this.window.offsetTop - this.posY2), (this.parentNode.offsetHeight - this.window.offsetHeight ))) + 'px'
       }
-
       this.posX1 = e.clientX;
       this.posY1 = e.clientY;
 
