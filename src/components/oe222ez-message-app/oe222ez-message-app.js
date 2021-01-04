@@ -222,8 +222,19 @@ customElements.define('oe222ez-message-app',
     onMessage (e) {
      console.log('onMessage')
      const parseData = JSON.parse(e.data)
+
+    console.error(parseData)
+
      const textElement = document.createElement('p')
-     textElement.innerHTML = parseData.data
+
+     var username
+     if (parseData.username === '') {
+      username = 'Undefined'
+     } else {
+       username = parseData.username
+     }
+
+     textElement.innerHTML = `${username}: ` + parseData.data
      const messageContainer = this.shadowRoot.querySelector('#messages')
      messageContainer.appendChild(textElement)
 
