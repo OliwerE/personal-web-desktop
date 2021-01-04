@@ -68,8 +68,43 @@ h1 {
   height: 100%;
   margin-top: 30px;
 }
+
+/* start menu  */
+
+#startDiv {
+  text-align: center;
+}
+
+#allChannels {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#changeUsername {
+  margin-top: 20px;
+  text-align: center;
+}
+
+startDiv, h2 {
+  margin: 0;
+  margin-bottom: 10px;
+}
 </style>
 <div id="messageAppContainer">
+</div>
+`
+
+const startTemplate = document.createElement('template')
+startTemplate.innerHTML = `
+<div id="startDiv">
+  <h1>Message application</h1>
+  <input id="allChannels" type="button" value="All channels">
+  <br>
+  <h2>Join a private channel</h2>
+  <input id="privateChannelText" type="text" placeholder="Channel name"/>
+  <input id="privateChannel" type="button" value="Start channel"/>
+  <br>
+  <input id="changeUsername" type="button" value="Change username">
 </div>
 `
 
@@ -108,6 +143,8 @@ customElements.define('oe222ez-message-app',
       super()
 
       this.username = undefined // användarnamnet
+      this.channel = ''
+      this.privateChannel = false // returnerar data från alla kanaler (om false)
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
@@ -119,6 +156,59 @@ customElements.define('oe222ez-message-app',
 
     connectedCallback () {
       console.log('message started!')
+
+      const nameInLocStorage = localStorage.getItem('oe222ez-message-app')
+
+      if (nameInLocStorage === null || nameInLocStorage === '') {
+        console.log('starts new username!')
+        this.createUserName()
+      } else {
+        const container = this.shadowRoot.querySelector('#messageAppContainer')
+        container.appendChild(startTemplate.content.cloneNode(true))
+      
+
+
+        // event lyssnare för knapparna!
+        this.startMenuEvent = (e) => {
+          console.error (e.target.id)
+
+          if (e.target.id === 'allChannels') {
+            this.privateChannel = false
+            this.shadowRoot.querySelector('#startDiv').remove()
+            this.username = nameInLocStorage
+            console.log('user rdy!')
+            const chat = this.shadowRoot.querySelector('#messageAppContainer')
+            chat.appendChild(chatInterface.content.cloneNode(true))
+            this.beginWebSocketConnection()
+          } else if (e.target.id === 'changeUsername') {
+            this.shadowRoot.querySelector('#startDiv').remove()
+            console.log('starts CHANGE username')
+            this.createUserName()
+          } else if (e.target.id === 'privateChannel') {
+            console.log('starts privateChannel')
+            this.privateChannel = true
+            this.channel = this.shadowRoot.querySelector('#privateChannelText').value
+            
+            // upprepas i både denna och allChannels!
+            this.username = nameInLocStorage
+            this.shadowRoot.querySelector('#startDiv').remove()
+            const chat = this.shadowRoot.querySelector('#messageAppContainer')
+            chat.appendChild(chatInterface.content.cloneNode(true))
+            
+            console.log('channel: ', this.channel)
+            this.beginWebSocketConnection()
+          }
+        }
+
+        this.shadowRoot.querySelector('#startDiv').addEventListener('click', this.startMenuEvent)
+      }
+
+
+
+
+
+
+      /*
 
       const nameInLocStorage = localStorage.getItem('oe222ez-message-app')
 
@@ -141,8 +231,9 @@ customElements.define('oe222ez-message-app',
         console.log('message app ser att  window stänger!', e.detail.msg)
         this.webSocket.close()
       })
-      
+      */
 
+    
     }
 
     attributeChangedCallback (name, oldValue, newValue) {
@@ -206,6 +297,13 @@ customElements.define('oe222ez-message-app',
       this.webSocket.onclose = (e) => {
         console.log('---onclose----')
         console.log(e)
+        
+        // meddelar användaren att anslutningen är avstängd obs denna räknas inte in i 25 meddelanden!
+        const textElement = document.createElement('p')
+        const messageContainer = this.shadowRoot.querySelector('#messages')
+        textElement.innerHTML = 'The Server: You have been disconnected!'
+        messageContainer.appendChild(textElement)
+        
         console.log('---onclose----')
       }
 
@@ -216,6 +314,18 @@ customElements.define('oe222ez-message-app',
       }
         // this.webSocket.close() stänger anslutning
 
+
+      // lyssnar efter stängd windowkomponent:
+      const closeConnection = this.shadowRoot.host.parentNode.parentNode.host //egna window elementet stängs!
+      console.error(closeConnection)
+      closeConnection.addEventListener('oe222ez-window-close', (e) => {
+        console.log('message app ser att  window stänger!', e.detail.msg)
+        this.webSocket.close()
+      })
+
+
+
+
         this.startEventlisteners()
     }
 
@@ -225,25 +335,34 @@ customElements.define('oe222ez-message-app',
 
     console.error(parseData)
 
-     const textElement = document.createElement('p')
-
-     var username
-     if (parseData.username === '') {
-      username = 'Undefined'
-     } else {
-       username = parseData.username
-     }
-
-     textElement.innerHTML = `${username}: ` + parseData.data
-     const messageContainer = this.shadowRoot.querySelector('#messages')
-     messageContainer.appendChild(textElement)
-
-     messageContainer.scrollTop = messageContainer.scrollHeight // visar alltid längst ner i message div
-    
-    if (messageContainer.childNodes.length > 25) {
-      console.log('more than 25 messages! removes first message!')
-      messageContainer.firstChild.remove()
+    if (this.privateChannel === false) {
+      this.displayMessage(parseData)
+    } else if (this.privateChannel === true) {
+      if (parseData.channel === this.channel)
+      this.displayMessage(parseData)
     }
+    }
+
+    displayMessage (parseData) {
+      const textElement = document.createElement('p')
+
+      var username
+      if (parseData.username === '') {
+       username = 'Undefined'
+      } else {
+        username = parseData.username
+      }
+ 
+      textElement.innerHTML = `${username}: ` + parseData.data
+      const messageContainer = this.shadowRoot.querySelector('#messages')
+      messageContainer.appendChild(textElement)
+ 
+      messageContainer.scrollTop = messageContainer.scrollHeight // visar alltid längst ner i message div
+     
+     if (messageContainer.childNodes.length > 25) {
+       console.log('more than 25 messages! removes first message!')
+       messageContainer.firstChild.remove()
+     }
     }
 
     startEventlisteners () {
@@ -278,18 +397,23 @@ customElements.define('oe222ez-message-app',
 
       const input = this.shadowRoot.querySelector('#sendMessageText')
 
+      if(input.value !== '') {
+
       const data = {
         "type": "message",
         "data" : input.value,
         "username": this.username,
-        "channel": "my, not so secret, channel",
+        "channel": this.channel,
         "key": "eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd"
       }
+
+      console.error(data) // fel: anv undef!
 
       this.webSocket.send(JSON.stringify(data)) // skickar data!
 
       // ta bort text från input
-
+      
+    }
     }
     
 
