@@ -338,7 +338,7 @@ customElements.define('oe222ez-message-app',
     if (this.privateChannel === false) {
       this.displayMessage(parseData)
     } else if (this.privateChannel === true) {
-      if (parseData.channel === this.channel)
+      if (parseData.channel === this || parseData.type === 'notification')
       this.displayMessage(parseData)
     }
     }
