@@ -11,6 +11,7 @@ template.innerHTML = `
 #startMenu {
   display:block;
   width: 100%;
+  max-width: 450px;
   min-height: 270px;
 }
 h1 {
@@ -36,8 +37,8 @@ h1 {
 /*  Weather Response  */
 
 #weatherResponse {
+  max-width: 450px;
   display: grid;
-
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 50px 100px 25px 100px 50px;
   grid-template-areas:
