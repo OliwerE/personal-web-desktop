@@ -38,6 +38,9 @@ template.innerHTML = `
 .buttons:focus {
   outline: none;
 }
+.buttons:hover{
+  cursor: pointer;
+}
 #memoryWindow {
   background: url('./js/components/oe222ez-pwd/icons/memoryIcon.png');
 }
@@ -53,9 +56,9 @@ template.innerHTML = `
 </div>
 <div id="dock">
   <div id="dockButtonContainer">
-    <button class="buttons" id="memoryWindow"></button>
-    <button class="buttons" id="messageWindow"></button>
-    <button class="buttons" id="weatherWindow"></button>
+    <button class="buttons" id="memoryWindow" title="Memory"></button>
+    <button class="buttons" id="messageWindow" title="Messages"></button>
+    <button class="buttons" id="weatherWindow" title="Weather"></button>
   </div>
 </div>
  `
