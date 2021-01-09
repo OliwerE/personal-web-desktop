@@ -1,5 +1,5 @@
 /**
- *
+ * Represents a browser desktop environment.
  *
  * @author Oliwer Ellréus <oe222ez@student.lnu.se>
  * @version 1.0.0
@@ -11,7 +11,7 @@ template.innerHTML = `
 <style>
 #windowContainer {
     display: block;
-    background-color: orange;
+    background-color: #ffee33;
     height: calc(100vh - 75px);
     width: 100%;
     margin: 0;
@@ -20,7 +20,7 @@ template.innerHTML = `
 
 #dock {
     height: 75px;
-    background-color: #FFFF52;
+    background-color: #9effff;
 }
 #dockButtonContainer {
   width: 360px;

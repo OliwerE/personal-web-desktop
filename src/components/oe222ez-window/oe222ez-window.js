@@ -19,7 +19,7 @@ template.innerHTML = `
 #windowHeader {
   float: left;
   overflow: hidden;
-  background-color: orange;
+  background-color: #9effff;
   width: 90%;
   height: 30px;
 }
