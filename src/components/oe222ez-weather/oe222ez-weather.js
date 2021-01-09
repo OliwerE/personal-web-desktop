@@ -339,7 +339,7 @@ customElements.define('oe222ez-weather',
 
       // windspeed:
       const windSpeedElement = this.shadowRoot.querySelector('#windSpeed')
-      const windspeed = `Windspeed: ${this.lastWeatherResponse.wind.speed} m/s`
+      const windspeed = `Windspeed: ${this.lastWeatherResponse.wind.speed.toFixed(0)} m/s`
       const windSpeedTextNode = document.createTextNode(windspeed)
       windSpeedElement.appendChild(windSpeedTextNode)
 

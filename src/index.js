@@ -10,10 +10,11 @@ import './components/oe222ez-tile/index'
 import './components/oe222ez-memory/'
 import './components/oe222ez-message-app'
 import './components/oe222ez-weather/'
+import './components/oe222ez-pwd/index'
 
 console.log('TODO: Start working on the assignment')
 
-
+/*
 // fönster komponent med memory (test)
 const memoryWindow = () => {
 //fönster
@@ -63,4 +64,4 @@ const weatherWindow = () => {
     
     }
     document.querySelector('#weatherWindow').addEventListener('click', weatherWindow)
-
+*/
