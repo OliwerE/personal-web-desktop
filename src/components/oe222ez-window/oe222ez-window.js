@@ -86,7 +86,7 @@ customElements.define('oe222ez-window',
         
         
         // skapar en array med alla element i domen
-        const zIndexarray = Array.from(document.querySelectorAll('oe222ez-window'))
+        const zIndexarray = Array.from(this.shadowRoot.host.parentNode.querySelectorAll('oe222ez-window'))
         
         console.log(zIndexarray)
         
