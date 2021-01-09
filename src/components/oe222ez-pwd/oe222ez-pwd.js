@@ -31,11 +31,21 @@ template.innerHTML = `
 .buttons {
   height: 100%;
   width: 75px;
-  background-color: #66ffff;
 }
-.buttons:active, .buttons:focus {
-  background-color: #37d2d2;
+.buttons:active {
+  transform: scale(0.9);
+}
+.buttons:focus {
   outline: none;
+}
+#memoryWindow {
+  background: url('./js/components/oe222ez-pwd/icons/memoryIcon.png');
+}
+#messageWindow {
+  background: url('./js/components/oe222ez-pwd/icons/messageIcon.png'); /* https://uxwing.com/forum-icon/ */
+}
+#weatherWindow {
+  background: url('./js/components/oe222ez-pwd/icons/weatherIcon.png'); /* https://uxwing.com/day-cloudy-icon/ */
 }
 </style>
 <div id="windowContainer" ">
