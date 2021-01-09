@@ -59,13 +59,15 @@ customElements.define('oe222ez-window',
     connectedCallback () {
       console.log('A window component added to dom!')
 
+      this.style.zIndex = 1 // Default Zindex
+      this.setHighestZindex() // fönsterkomponenten får högsta z-index
+
       // Element som används i komponenten
       this.window = this.shadowRoot.querySelector('#window')
       this.windowHeader = this.shadowRoot.querySelector('#windowHeader')
       this.closeElementDiv = this.shadowRoot.querySelector('#closeWindowBtn')
 
-      // sätter default zIndex
-      this.style.zIndex = 1
+
       this.style.position = 'absolute'
 
       // event lyssnare för stäng knappen
@@ -78,54 +80,11 @@ customElements.define('oe222ez-window',
         }))
       })
 
-      // move window metod (gör om en metod för mkt!)
-      this.moveWindow()
+
       
-      this.window.addEventListener('mousedown', (e) => { // flytta funktionen till egen metod!
-        console.log('Nuvarane zindex: ', this.style.zIndex)
-        
-        
-        // skapar en array med alla element i domen
-        const zIndexarray = Array.from(this.shadowRoot.host.parentNode.querySelectorAll('oe222ez-window'))
-        
-        console.log(zIndexarray)
-        
-        
-        // loopar igenom alla window element och loggar
-        let allZIndex = []
-        for (let i = 0; i < zIndexarray.length; i++) {
-            let zIndexNumber = parseInt(zIndexarray[i].style.zIndex)
+      this.window.addEventListener('mousedown', this.setHighestZindex.bind(this))
 
-            console.log('loop: ', zIndexNumber)
-
-            allZIndex.push(zIndexNumber)
-        }
-
-        
-        var sortedZIndex = allZIndex.sort(function(a, b) {
-          return a - b
-        })
-
-        console.log(sortedZIndex)
-
-        
-        var newZIndexRequired = sortedZIndex[allZIndex.length - 1] + 1
-
-        
-        //console.log('nya zindex för att vara övers: ', newZIndexRequired)
-
-
-        // fixa: öka inte z index om samma element väljs igen!
-
-          this.style.zIndex = newZIndexRequired
-
-        console.log(this.style.zIndex)
-      })
-
-      this.windowHeader.addEventListener('mouseleave', () => {
-        this.move = false
-      })
-
+      this.windowHeader.addEventListener('mousedown', this.moveWindow.bind(this))
 
     }
 
@@ -139,22 +98,58 @@ customElements.define('oe222ez-window',
     }
 
     disconnectedCallback () {
-    }
-    
-    moveWindow () {
-      //this.windowHeader.onmousedown = this.mouseDownCoord.bind(this)
-      this.windowHeader.addEventListener('mousedown', this.mouseDownCoord.bind(this))
+
     }
 
-    mouseDownCoord (e) {
-      this.move = true
+    setHighestZindex () {
+      console.log('Nuvarane zindex: ', this.style.zIndex)
+        
+        
+        // skapar en array med alla element i domen
+        const zIndexarray = Array.from(this.shadowRoot.host.parentNode.querySelectorAll('oe222ez-window'))
+        
+        console.log(zIndexarray)
+        
+        
+        // loopar igenom alla window element och loggar
+        let allZIndex = []
+        for (let i = 0; i < zIndexarray.length; i++) {
+          console.log(i)
+            let zIndexNumber = parseInt(zIndexarray[i].style.zIndex)
+
+            console.log('loop: ', zIndexNumber)
+
+            allZIndex.push(zIndexNumber)
+        }
+
+        
+        var sortedZIndex = allZIndex.sort(function(a, b) {
+          return a - b
+        })
+
+        console.error(sortedZIndex)
+
+        
+        var newZIndexRequired = sortedZIndex[allZIndex.length - 1] + 1
+
+        
+        //console.log('nya zindex för att vara övers: ', newZIndexRequired)
+
+
+        // fixa: öka inte z index om samma element väljs igen!
+
+          this.style.zIndex = newZIndexRequired
+
+        console.log('nya z-index', this.style.zIndex)
+
+    }
+    
+    moveWindow (e) {
       e.preventDefault() // stoppar markering av text i andra fönster
       // funktionen används när musen flyttas'
-      const changeWindowPosition = (e) => {
-        if (this.move === true) {
-        
+      const changeWindowPosition = (e) => {  
         //console.log('changes position!')
-        //e.preventDefault() // stoppar markering av text i andra fönster
+        e.preventDefault() // stoppar markering av text i andra fönster
 
           this.posX2 = this.posX1 - e.clientX
           this.posY2 = this.posY1 - e.clientY
@@ -166,11 +161,6 @@ customElements.define('oe222ez-window',
           // ändrar fönster div positionen
           this.window.style.left = Math.max(this.parentNode.offsetLeft, Math.min((this.window.offsetLeft - this.posX2), (this.parentNode.offsetWidth - this.window.offsetWidth )))  + 'px'
           this.window.style.top = Math.max(this.parentNode.offsetTop, Math.min((this.window.offsetTop - this.posY2), (this.parentNode.offsetHeight - this.window.offsetHeight ))) + 'px'
-        } else {
-          console.error('Move FALSE!')
-          this.disablemoveWindow()
-          document.onmouseup = null
-        }
       }
       this.posX1 = e.clientX
       this.posY1 = e.clientY
@@ -179,6 +169,12 @@ customElements.define('oe222ez-window',
       document.onmouseup = this.disablemoveWindow // gör om till event
       // flyttar elementet:
       document.onmousemove = changeWindowPosition // gör om till event
+
+      document.body.addEventListener('mouseleave', () => { // FIXA: mouseleave på window headern fungerar inte
+        console.error('Move stopped!')
+        this.disablemoveWindow()
+        document.onmouseup = null
+      })
 
 
     }
