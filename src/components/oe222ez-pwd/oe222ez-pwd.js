@@ -36,7 +36,8 @@ template.innerHTML = `
   transform: scale(0.9);
 }
 .buttons:focus {
-  outline: none;
+  /*outline: none;*/
+  outline-color: green;
 }
 .buttons:hover{
   cursor: pointer;
