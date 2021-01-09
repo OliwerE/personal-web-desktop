@@ -122,6 +122,10 @@ customElements.define('oe222ez-window',
         console.log(this.style.zIndex)
       })
 
+      this.windowHeader.addEventListener('mouseleave', () => {
+        this.move = false
+      })
+
 
     }
 
@@ -138,36 +142,44 @@ customElements.define('oe222ez-window',
     }
     
     moveWindow () {
-      this.windowHeader.onmousedown = this.mouseDownCoord.bind(this)
+      //this.windowHeader.onmousedown = this.mouseDownCoord.bind(this)
+      this.windowHeader.addEventListener('mousedown', this.mouseDownCoord.bind(this))
     }
 
     mouseDownCoord (e) {
+      this.move = true
+      e.preventDefault() // stoppar markering av text i andra fönster
       // funktionen används när musen flyttas'
       const changeWindowPosition = (e) => {
+        if (this.move === true) {
+        
         //console.log('changes position!')
-        e.preventDefault() // stoppar markering av text i andra fönster
+        //e.preventDefault() // stoppar markering av text i andra fönster
 
-        this.posX2 = this.posX1 - e.clientX
-        this.posY2 = this.posY1 - e.clientY
-        this.posX1 = e.clientX
-        this.posY1 = e.clientY
+          this.posX2 = this.posX1 - e.clientX
+          this.posY2 = this.posY1 - e.clientY
+          this.posX1 = e.clientX
+          this.posY1 = e.clientY
 
-        //console.log(this.posX2, this.posY2)
+          //console.log(this.posX2, this.posY2)
 
-        // ändrar fönster div positionen
-        this.window.style.left = Math.max(this.parentNode.offsetLeft, Math.min((this.window.offsetLeft - this.posX2), (this.parentNode.offsetWidth - this.window.offsetWidth )))  + 'px'
-        this.window.style.top = Math.max(this.parentNode.offsetTop, Math.min((this.window.offsetTop - this.posY2), (this.parentNode.offsetHeight - this.window.offsetHeight ))) + 'px'
+          // ändrar fönster div positionen
+          this.window.style.left = Math.max(this.parentNode.offsetLeft, Math.min((this.window.offsetLeft - this.posX2), (this.parentNode.offsetWidth - this.window.offsetWidth )))  + 'px'
+          this.window.style.top = Math.max(this.parentNode.offsetTop, Math.min((this.window.offsetTop - this.posY2), (this.parentNode.offsetHeight - this.window.offsetHeight ))) + 'px'
+        } else {
+          console.error('Move FALSE!')
+          this.disablemoveWindow()
+        }
       }
-      this.posX1 = e.clientX;
-      this.posY1 = e.clientY;
-
+      this.posX1 = e.clientX
+      this.posY1 = e.clientY
 
       //Hantera mouseup:
-
-      document.onmouseup = this.disablemoveWindow
-
+      document.onmouseup = this.disablemoveWindow // gör om till event
       // flyttar elementet:
-      document.onmousemove = changeWindowPosition
+      document.onmousemove = changeWindowPosition // gör om till event
+
+
     }
 
     disablemoveWindow () {
