@@ -169,6 +169,7 @@ customElements.define('oe222ez-window',
         } else {
           console.error('Move FALSE!')
           this.disablemoveWindow()
+          document.onmouseup = null
         }
       }
       this.posX1 = e.clientX
