@@ -12,24 +12,41 @@ template.innerHTML = `
 #windowContainer {
     display: block;
     background-color: orange;
-    height: 90vh;
+    height: calc(100vh - 75px);
     width: 100%;
     margin: 0;
     padding: 0;
 }
 
 #dock {
-    height: 10vh;
-    background-color: blue;
+    height: 75px;
+    background-color: #FFFF52;
+}
+#dockButtonContainer {
+  width: 360px;
+  height: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+.buttons {
+  height: 100%;
+  width: 75px;
+  background-color: #66ffff;
+}
+.buttons:active, .buttons:focus {
+  background-color: #37d2d2;
+  outline: none;
 }
 </style>
 <div id="windowContainer" ">
 
 </div>
 <div id="dock">
-  <button id="memoryWindow">Add memory</button>
-  <button id="messageWindow">Add message app</button>
-  <button id="weatherWindow">Add weather window</button>
+  <div id="dockButtonContainer">
+    <button class="buttons" id="memoryWindow"></button>
+    <button class="buttons" id="messageWindow"></button>
+    <button class="buttons" id="weatherWindow"></button>
+  </div>
 </div>
  `
 
@@ -102,7 +119,6 @@ customElements.define('oe222ez-pwd',
       const weatherElement = document.createElement('oe222ez-weather')
       this.addWindowContent(weatherElement)
     }
-
 
   }
 )
