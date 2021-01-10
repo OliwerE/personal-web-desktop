@@ -34,7 +34,7 @@ template.innerHTML = `
 </style>
 <div id="window">
 <div id="windowHeader">window header</div>
-<div id="closeWindowBtn"></div>
+<div id="closeWindowBtn" tabindex="0"></div>
   <slot id="windowSlot" name="application"></slot>
 </div>
 
