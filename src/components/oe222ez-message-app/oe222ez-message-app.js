@@ -158,6 +158,7 @@ customElements.define('oe222ez-message-app',
       this.username = undefined // användarnamnet
       this.channel = ''
       this.privateChannel = false // returnerar data från alla kanaler (om false)
+      this.webSocketConnection = false
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
@@ -349,6 +350,7 @@ customElements.define('oe222ez-message-app',
       this.webSocket = new WebSocket('wss://cscloud6-127.lnu.se/socket/')
 
       this.webSocket.onopen = (e) => {
+        this.webSocketConnection = true
         console.log('---onopen----')
         console.log(e)
 
@@ -380,6 +382,17 @@ customElements.define('oe222ez-message-app',
         textElement.innerHTML = 'The Server: You have been disconnected!'
         messageContainer.appendChild(textElement)
         */
+
+        if (this.webSocketConnection === true) { // om anslutningen bryts från servern
+          this.webSocketConnection = false
+
+          const message = {
+            "data": "You have been disconnected!",
+            "username": "The Server"
+          }
+
+          this.displayMessage(message)
+        }
         
         console.log('---onclose----')
       }
@@ -400,6 +413,7 @@ customElements.define('oe222ez-message-app',
       this.windowClosedEvent = (e) => {
         console.log('message app ser att  window stänger!', e.detail.msg)
         this.webSocket.close()
+        this.webSocketConnection = false
       }
 
       this.closeConnection.addEventListener('oe222ez-window-close', this.windowClosedEvent)
@@ -443,7 +457,7 @@ customElements.define('oe222ez-message-app',
         // stäng anslutning (FIXA: om den inte redan är stängd!)
 
         this.webSocket.close()
-
+        this.webSocketConnection = false
         // tar bort create user
         this.shadowRoot.querySelector('#chatInterface').remove()
 
