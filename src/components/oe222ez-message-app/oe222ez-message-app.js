@@ -43,6 +43,17 @@ h1 {
   overflow-y:auto;
 }
 
+#messages p {
+  float: left;
+  background-color: #9effff;
+  width: 75%;
+  border: 1px solid;
+  border-radius: 5px;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: 0px;
+}
+
 #sendMessage {
   height: 60px;
 }
@@ -492,6 +503,9 @@ customElements.define('oe222ez-message-app',
       var username
       if (parseData.username === '') {
        username = 'Undefined'
+      } else if (parseData.username === this.username) { // om det är eget meddelande
+        username = 'You'
+        textElement.setAttribute('style', 'float: right; background-color: #FDED32;') // eget meddelande
       } else {
         username = parseData.username
       }
@@ -512,8 +526,7 @@ customElements.define('oe222ez-message-app',
 
     sendMessage () {
       console.log('----starts send message ----')
-
-
+      
       // hämta data
 
       const input = this.shadowRoot.querySelector('#sendMessageText')
@@ -531,6 +544,8 @@ customElements.define('oe222ez-message-app',
       console.error(data) // fel: anv undef!
 
       this.webSocket.send(JSON.stringify(data)) // skickar data!
+
+      this.shadowRoot.querySelector('#sendMessageText').value = ''
 
       // ta bort text från input
       
