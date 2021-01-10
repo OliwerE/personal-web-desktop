@@ -170,14 +170,43 @@ customElements.define('oe222ez-window',
       // flyttar elementet:
       document.onmousemove = changeWindowPosition // gör om till event
 
-      document.body.addEventListener('mouseleave', () => { // FIXA: mouseleave på window headern fungerar inte
+      /*
+      this.windowHeader.addEventListener('mouseleave', () => { // FIXA: mouseleave på window headern fungerar inte
         console.error('Move stopped!')
         this.disablemoveWindow()
         document.onmouseup = null
       })
+      */
+      
+     this.windowHeader.addEventListener('mouseleave', () => { // FIXA: mouseleave på window headern fungerar inte
+      this.leave = true
 
+      
+      const mouseEnter = () => {
+        this.leave = false
+      }
 
-    }
+      this.windowHeader.addEventListener('mouseenter', mouseEnter)
+      
+
+      setTimeout(() => {
+        console.error(this.leave)
+        if (this.leave === true) {
+          console.error('Move stopped!')
+          this.disablemoveWindow()
+          document.onmouseup = null
+        } else {
+          console.error('did not leave!')
+        }
+
+        this.windowHeader.removeEventListener('mouseenter', mouseEnter)
+      }, 50)
+        
+      
+    })
+  }
+
+    
 
     disablemoveWindow () {
       document.onmousemove = null
