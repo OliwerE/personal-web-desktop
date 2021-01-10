@@ -492,7 +492,7 @@ customElements.define('oe222ez-message-app',
     if (this.privateChannel === false) {
       this.displayMessage(parseData)
     } else if (this.privateChannel === true) {
-      if (parseData.channel === this || parseData.type === 'notification')
+      if (parseData.channel === this.channel || parseData.type === 'notification')
       this.displayMessage(parseData)
     }
     }
@@ -526,7 +526,7 @@ customElements.define('oe222ez-message-app',
 
     sendMessage () {
       console.log('----starts send message ----')
-      
+
       // hämta data
 
       const input = this.shadowRoot.querySelector('#sendMessageText')
