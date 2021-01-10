@@ -23,18 +23,23 @@ template.innerHTML = `
   width: 90%;
   height: 30px;
 }
+
+
 #closeWindowBtn {
+  cursor: default;
   overflow: hidden;
   background-color: red;
   height: 30px;
   width: 10%;
   text-align: center;
+  font-size: 25px;
+  font-weight: bold;
 
 }
 </style>
 <div id="window">
-<div id="windowHeader">window header</div>
-<div id="closeWindowBtn" tabindex="0"></div>
+<div id="windowHeader"></div>
+<div id="closeWindowBtn" tabindex="0">X</div>
   <slot id="windowSlot" name="application"></slot>
 </div>
 
