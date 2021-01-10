@@ -8,35 +8,54 @@
 
 const startTemplate = document.createElement('template')
 startTemplate.innerHTML = `
- <div id="memoryStart">
- <div id="memoryStartBtns">
- <h1>Memory</h1>
- <button id="btnSmall">Small (2x2)</button>
- <br>
- <button id="btnMedium">Medium (4x2)</button>
- <br>
- <button id="btnLarge">Large (4x4)</button>
- </div>
- <br>
- <h2>Credits</h2>
- <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
- </div>
- `
-
-const gameTemplate = document.createElement('template')
-gameTemplate.innerHTML = `
 <style>
+#memoryStart {
+  text-align: center;
+}
+
 #memoryContainer {
   background-color: yellow;
   width: 400px;
   max-height: 400px
+  display: block;
+  margin: 0 auto;
 }
 
 h2 {
   font-size: 20px;
 }
 
+.memorySizeBtns {
+  width: 125px;
+  height: 30px;
+  margin-top: 10px;
+  background-color: #FDED32;
+  border: 2px solid black;
+  border-radius: 20px;
+}
+
+.memorySizeBtns:hover, .memorySizeBtns:focus {
+  background-color: #9effff;
+}
 </style>
+ <div id="memoryStart">
+ <h1>Memory</h1>
+  <div id="memoryStartBtns">
+
+    <button class="memorySizeBtns" id="btnSmall">Small (2x2)</button>
+    <br>
+    <button class="memorySizeBtns" id="btnMedium">Medium (4x2)</button>
+    <br>
+    <button class="memorySizeBtns" id="btnLarge">Large (4x4)</button>
+  </div>
+  <br>
+  <h2>Credits</h2>
+  <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+ </div>
+ `
+
+const gameTemplate = document.createElement('template')
+gameTemplate.innerHTML = `
 <div id="memory">
 <div id="memoryContainer"></div> 
 <p id="memoryResult"></p>
