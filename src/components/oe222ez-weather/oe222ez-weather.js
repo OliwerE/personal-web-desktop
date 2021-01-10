@@ -1,5 +1,5 @@
 /**
- *
+ * Represents a webcomponent displaying the current weather.
  *
  * @author Oliwer Ellréus <oe222ez@student.lnu.se>
  * @version 1.0.0
@@ -163,39 +163,21 @@ customElements.define('oe222ez-weather',
         .appendChild(template.content.cloneNode(true))
     }
 
-    static get observedAttributes () {
-      //return []
-    }
-
     connectedCallback () {
       // lägger till start menu div
       this.shadowRoot.appendChild(startTemplate.content.cloneNode(true))
 
-
       this.startClick = () => {
-        // ta bort eventlistener
         this.searchCity()
       }
       this.shadowRoot.querySelector('#cityBtn').addEventListener('click', this.startClick)
 
-
       this.startEnter = (e) => {
         if (e.key === 'Enter') {
-          // ta bort eventlistener
           this.searchCity()
         }
       }
       this.shadowRoot.querySelector('#citySearch').addEventListener('keypress', this.startEnter)
-
-      // lägg till enter event lyssnare!
-      
-    //this.showResponse() //temp
-
-    }
-
-    attributeChangedCallback (name, oldValue, newValue) {
-
-
     }
 
     disconnectedCallback () {
@@ -211,8 +193,13 @@ customElements.define('oe222ez-weather',
     }
 
     searchCity () {
-      this.createLink()
-      this.getWeather()
+      if (this.shadowRoot.querySelector('#citySearch').value !== '') {
+        this.createLink()
+        this.getWeather()
+      } else {
+        this.shadowRoot.querySelector('#response').innerHTML = 'Enter a location!'
+      }
+
     }
 
     createLink () {
@@ -224,11 +211,9 @@ customElements.define('oe222ez-weather',
     }
 
     async getWeather () {
-      await window.fetch(this.weatherLink).then((response) => { // 401:an stoppas redan här!
-        //console.log(response)
+      await window.fetch(this.weatherLink).then((response) => {
         return response.json()
       }).then((jsonResponse) => {
-        //console.log(jsonResponse)
         this.lastWeatherResponse = jsonResponse
         this.readResponseCode()
       }).catch((err) => {
@@ -237,10 +222,6 @@ customElements.define('oe222ez-weather',
     }
 
     readResponseCode () {
-      //alert(typeof this.lastWeatherResponse.cod)
-
-      //alert(this.lastWeatherResponse.cod)
-
       const responseElement = this.shadowRoot.querySelector('#response')
       var textToUser
       if (this.lastWeatherResponse.cod === 200) {
@@ -265,10 +246,8 @@ customElements.define('oe222ez-weather',
         textToUser = `Try again later! Err: ${this.lastWeatherResponse.cod}`
         console.error('oe222ez-weather: Ran out of requests! max 60/h', this.lastWeatherResponse.cod)
         
-
         // meddelande till användaren
         responseElement.innerHTML = textToUser
-
       } else {
         textToUser = `Something went wrong! ${this.lastWeatherResponse.cod}`
         console.error('oe222ez-weather: ', textToUser, ' Got an unknown response code: ', this.lastWeatherResponse.cod)
@@ -278,36 +257,37 @@ customElements.define('oe222ez-weather',
       }
     }
     
-
     showResponse () {
-      //remove start event listeners
-      this.shadowRoot.querySelector('#cityBtn').removeEventListener('click', this.startClick)
-      this.shadowRoot.querySelector('#citySearch').removeEventListener('keypress', this.startEnter)
+      this.changeToResponseTemplate()
+      this.responseTemplateAddText()
+    }
 
-
-      this.shadowRoot.querySelector('#startMenu').remove() // removes start input
-      this.shadowRoot.appendChild(weatherData.content.cloneNode(true))
-
-
-      // add back button event listener
-      this.returnButtonEvent = () => {
-        this.shadowRoot.querySelector('#returnBtn').removeEventListener('click', this.returnButtonEvent)
-        this.restart()
-      }
-
-      this.shadowRoot.querySelector('#returnBtn').addEventListener('click', this.returnButtonEvent)
-
-
+    changeToResponseTemplate () {
+            //remove start event listeners
+            this.shadowRoot.querySelector('#cityBtn').removeEventListener('click', this.startClick)
+            this.shadowRoot.querySelector('#citySearch').removeEventListener('keypress', this.startEnter)
       
+      
+            this.shadowRoot.querySelector('#startMenu').remove() // removes start input
+            this.shadowRoot.appendChild(weatherData.content.cloneNode(true))
+      
+      
+            // add back button event listener
+            this.returnButtonEvent = () => {
+              this.shadowRoot.querySelector('#returnBtn').removeEventListener('click', this.returnButtonEvent)
+              this.restart()
+            }
+      
+            this.shadowRoot.querySelector('#returnBtn').addEventListener('click', this.returnButtonEvent)
+    }
+
+    responseTemplateAddText () {
+
       this.shadowRoot.querySelector('#responseCity').innerHTML = this.lastWeatherResponse.name // platsens namn
 
-      const responseContainer = this.shadowRoot.querySelector('#weatherResponse')
-
-
-
       // desc:
-      const description = this.shadowRoot.querySelector('#responseDesc')
-      this.createTextElement(this.lastWeatherResponse.weather[0].description, description)
+      const description = this.shadowRoot.querySelector('#responseDesc').innerHTML = this.lastWeatherResponse.weather[0].description
+      //this.createTextElement(this.lastWeatherResponse.weather[0].description, description)
 
 
       //img:
@@ -315,45 +295,25 @@ customElements.define('oe222ez-weather',
       this.shadowRoot.querySelector('#weatherIcon').setAttribute('src', iconSrc)
 
       // wanted main data
-      const wantedMainParameters = ['temp', 'feels_like', 'temp_min', 'temp_max', 'humidity']
+      const wantedMainParameters = ['temp', 'feels_like', 'temp_min', 'temp_max', 'humidity', 'windSpeed']
       for (let i = 0; i < wantedMainParameters.length; i++) {
         var elementId = this.shadowRoot.querySelector(`#${wantedMainParameters[i]}`)
         var parameter = wantedMainParameters[i]
         var parameterResponse = this.lastWeatherResponse.main[parameter] // debug
         
         var text
-        if (i < wantedMainParameters.length - 1) { // om det är någon av temperaturerna
+        if (i < wantedMainParameters.length - 2) { // om det är någon av temperaturerna
           parameterResponse = (parameterResponse - 273.15).toFixed(0) + ' C'
           text = parameter.replace('_', ' ') + ': ' + parameterResponse
-        } else { // Om det är humidity
+        } else if (i === 4) { // Om det är humidity
           text = `Humidity: ${parameterResponse} %`
+        } else if (i === 5) {
+          text = `Windspeed: ${this.lastWeatherResponse.wind.speed.toFixed(0)} m/s`
         }
-
-
+        
         var data = document.createTextNode(`${text}`)
         elementId.appendChild(data)
-
-        //this.createTextElement(text, responseContainer)
       }
-
-
-      // windspeed:
-      const windSpeedElement = this.shadowRoot.querySelector('#windSpeed')
-      const windspeed = `Windspeed: ${this.lastWeatherResponse.wind.speed.toFixed(0)} m/s`
-      const windSpeedTextNode = document.createTextNode(windspeed)
-      windSpeedElement.appendChild(windSpeedTextNode)
-
-
-      //this.createTextElement(windspeed, responseContainer)
-      
-
-    }
-    
-    createTextElement (text, container) { // används bara av desc kanske ändra??
-      const element = document.createElement('p')
-      const textNode = document.createTextNode(text)
-      element.appendChild(textNode)
-      container.appendChild(element)
     }
 
     restart () { // startar om väder

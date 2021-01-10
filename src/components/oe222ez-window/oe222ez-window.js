@@ -178,7 +178,7 @@ customElements.define('oe222ez-window',
       })
       */
       
-     this.windowHeader.addEventListener('mouseleave', () => { // FIXA: mouseleave på window headern fungerar inte
+     this.windowHeader.addEventListener('mouseleave', () => { // stäng av denna i disablemoveWindow !!
       this.leave = true
 
       
