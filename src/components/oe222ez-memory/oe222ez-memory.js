@@ -171,18 +171,21 @@ customElements.define('oe222ez-memory',
           this._memorySize = 4
           this._highScoreList = 4
           //console.error(this._memorySize) // omstart fortf 4
+          this.disconnectedCallback() // Removes event listener
           this.startBoard()
         } else if (e.target.id === 'btnMedium') {
           console.log('MEDIUM')
           this._memorySize = 8
           this._highScoreList = 8
           //console.error(this._memorySize)
+          this.disconnectedCallback() // Removes event listener
           this.startBoard()
         } else if (e.target.id === 'btnLarge') {
           console.log('LARGE')
           this._memorySize = 16
           this._highScoreList = 16
           //console.error(this._memorySize)
+          this.disconnectedCallback() // Removes event listener
           this.startBoard()
         } else {
           console.error ('memory start something is wrong with buttons!')
@@ -221,7 +224,21 @@ customElements.define('oe222ez-memory',
     }
 
     disconnectedCallback () {
-      console.log('-----memory disconnectedcallback!-----')
+      // Start menu
+      if(this.shadowRoot.querySelector('#memoryStartBtns') !== null) {
+        this.shadowRoot.querySelector('#memoryStartBtns').removeEventListener('click', this.memoryStartBtnClicked)
+      }
+
+      // Removes memory game event listeners
+      if (this.shadowRoot.querySelector('#memoryContainer') !== null) {
+        this.removeListener()
+      }
+
+      // Removes menu btn listener in high score template
+      if (this.shadowRoot.querySelector('#menuBtn') !== null) {
+        this.shadowRoot.querySelector('#menuBtn').removeEventListener('click', this.restartListener)
+      }
+
     }
 
     startBoard () {
@@ -234,7 +251,7 @@ customElements.define('oe222ez-memory',
       this.shadowRoot.appendChild(gameTemplate.content.cloneNode(true))
       
       this.createTiles()
-      this.eventListener()
+      this.addmemoryBoardEventListener()
 
 
 
@@ -302,7 +319,7 @@ customElements.define('oe222ez-memory',
 
     }
 
-    eventListener () {
+    addmemoryBoardEventListener () {
 
       this.boardEventListener = this.shadowRoot.querySelector('#memoryContainer')
 
@@ -395,7 +412,7 @@ customElements.define('oe222ez-memory',
           console.log('last pair!')
           this.memoryFinished()
         } else {
-          this.eventListener() // skapar ny event listener
+          this.addmemoryBoardEventListener() // skapar ny event listener
         }
 
       } else if (this.lastDetail.className !== newDetail.className) {
@@ -419,7 +436,7 @@ customElements.define('oe222ez-memory',
 
         this.lastDetail = undefined // återställer (tillf. lösn.)
 
-        this.eventListener()
+        this.addmemoryBoardEventListener()
 
       } else {
         console.error('got else!')
@@ -439,7 +456,8 @@ customElements.define('oe222ez-memory',
         this.shadowRoot.querySelector('#highScore').remove()
 
         // tar bort eventlyssnare
-        this.removeListener()
+        //this.removeListener()
+        this.disconnectedCallback()
 
         this._createdElements = [] // tar bort skapade element!
         this.foundPairs = [] // återställer hittade tiles
