@@ -161,11 +161,11 @@ chatInterface.innerHTML = `
 
 customElements.define('oe222ez-message-app',
   /**
-   *
+   * Class represents the custom oe222ez-message-app element.
    */
   class extends HTMLElement {
     /**
-     *
+     * Constructs the custom element.
      */
     constructor () {
       super()
@@ -180,15 +180,15 @@ customElements.define('oe222ez-message-app',
         .appendChild(template.content.cloneNode(true))
     }
 
-    /**
-     *
-     */
+    /*
     static get observedAttributes () {
       return []
     }
+    */
 
     /**
-     *
+     * Method starts create username page if username doesn't exist
+     * If username exist in storage the menu page is loaded.
      */
     connectedCallback () {
       console.log('message started!')
@@ -207,7 +207,9 @@ customElements.define('oe222ez-message-app',
 
         // event lyssnare för knapparna!
         /**
-         * @param e
+         * An event listener function used to decide what to do based on which button was clicked.
+         *
+         * @param {object} e - The event object.
          */
         this.startMenuEvent = (e) => {
           console.error(e.target.id)
@@ -238,11 +240,13 @@ customElements.define('oe222ez-message-app',
           }
         }
 
-        this.shadowRoot.querySelector('#startDiv').addEventListener/**
-                                                                    * @param e
-                                                                    */
-        ('click', this.startMenuEvent)
+        this.shadowRoot.querySelector('#startDiv').addEventListener('click', this.startMenuEvent)
 
+        /**
+         * An event listener function used to start a private channel with enter.
+         *
+         * @param {object} e - An event object.
+         */
         this.startPrivateChannelEnter = (e) => {
           if (e.key === 'Enter') {
             this.disconnectedCallback()
@@ -254,17 +258,14 @@ customElements.define('oe222ez-message-app',
       }
     }
 
-    /**
-     * @param name
-     * @param oldValue
-     * @param newValue
-     */
+    /*
     attributeChangedCallback (name, oldValue, newValue) {
 
     }
+    */
 
     /**
-     *
+     * Method removes active event listeners.
      */
     disconnectedCallback () {
       // start template
@@ -311,15 +312,15 @@ customElements.define('oe222ez-message-app',
     }
 
     /**
-     *
+     * Method loads username template and saves user input as the new nickname.
      */
     createUserName () {
       const container = this.shadowRoot.querySelector('#messageAppContainer')
-      container.appendChild/**
-                            *
-                            */
-      (createUserName.content.cloneNode(true))
+      container.appendChild(createUserName.content.cloneNode(true))
 
+      /**
+       * An event listener function used to set input value as new username and load menu template.
+       */
       this.UsernameListenerFunction = () => {
         // ta bort båda eventlyssnarna!
 
@@ -339,11 +340,14 @@ customElements.define('oe222ez-message-app',
         this.connectedCallback()
       }
 
-      this.shadowRoot.querySelector('#createNameBtn').addEventListener/**
-                                                                       * @param e
-                                                                       */
-      ('click', this.UsernameListenerFunction)
+      this.shadowRoot.querySelector('#createNameBtn').addEventListener('click', this.UsernameListenerFunction)
 
+      /**
+       * An eventlistener function used to decide if enter was pressed.
+       * If enter was pressed another function is called.
+       *
+       * @param {object} e - The event object.
+       */
       this.createNameKeypress = (e) => {
         if (e.key === 'Enter') {
           this.UsernameListenerFunction() // lånar btn klick funktionen (ska göra samma sak!)
@@ -354,7 +358,7 @@ customElements.define('oe222ez-message-app',
     }
 
     /**
-     *
+     * A method used to set the name of the current channel.
      */
     setChannelName () {
       let channel
@@ -369,7 +373,7 @@ customElements.define('oe222ez-message-app',
     }
 
     /**
-     *
+     * Used to start a private channel.
      */
     startPrivateChannel () {
       console.log('starts privateChannel')
@@ -389,14 +393,16 @@ customElements.define('oe222ez-message-app',
     }
 
     /**
-     *
+     * Starts a new websocket connection.
      */
     beginWebSocketConnection () {
-      this.webSocket = new WebSocket/**
-                                     * @param e
-                                     */
-      ('wss://cscloud6-127.lnu.se/socket/')
+      this.webSocket = new WebSocket('wss://cscloud6-127.lnu.se/socket/')
 
+      /**
+       * Function called when the websocket connection is opened.
+       *
+       * @param {object} e - A response object.
+       */
       this.webSocket.onopen = (e) => {
         this.webSocketConnection = true
         console.log('---onopen----')
@@ -412,7 +418,9 @@ customElements.define('oe222ez-message-app',
       }
 
       /**
-       * @param e
+       * Function called when the client receives a message from the server.
+       *
+       * @param {object} e - A response object.
        */
       this.webSocket.onmessage = (e) => {
         console.log('---onmessage----')
@@ -422,7 +430,9 @@ customElements.define('oe222ez-message-app',
       }
 
       /**
-       * @param e
+       * Function called when the websocket connection is closed.
+       *
+       * @param {object} e - A response object.
        */
       this.webSocket.onclose = (e) => {
         console.log('---onclose----')
@@ -451,7 +461,9 @@ customElements.define('oe222ez-message-app',
       }
 
       /**
-       * @param e
+       * Function called when something is wrong with the websocket.
+       *
+       * @param {object} e - A response object.
        */
       this.webSocket.onerror = (e) => {
         console.log('---onerror----')
@@ -463,11 +475,13 @@ customElements.define('oe222ez-message-app',
       // lyssnar efter stängd windowkomponent: FLYTTA TILL STARTEVENTLISTENERS!
       this.closeConnection = this.shadowRoot.host.parentNode.parentNode.host // egna window elementet stängs!
       this.closeEvent = true
-      console.error/**
-                    * @param e
-                    */
-      (this.closeConnection)
+      console.error(this.closeConnection)
 
+      /**
+       * Function is called when the eventlisteners custom event is dispatched by the window components close window button.
+       *
+       * @param {object} e - An event object.
+       */
       this.windowClosedEvent = (e) => {
         console.log('message app ser att  window stänger!', e.detail.msg)
         this.webSocket.close()
@@ -480,14 +494,16 @@ customElements.define('oe222ez-message-app',
     }
 
     /**
-     *
+     * Starts chat event listeners.
      */
     startMessageEventlisteners () {
-      console.log/**
-                  * @param e
-                  */
-      ('----- starts eventlisteners! -----')
+      console.log('----- starts eventlisteners! -----')
 
+      /**
+       * An event listener function used when a key is pressed in the textarea.
+       *
+       * @param {object} e - An event object.
+       */
       this.eventListernerKeypress = (e) => {
         if (e.key === 'Enter') {
           console.log('---sends message!---')
@@ -497,22 +513,22 @@ customElements.define('oe222ez-message-app',
       const textField = this.shadowRoot.querySelector('#sendMessageText')
       textField.addEventListener('keypress', this.eventListernerKeypress)
 
-      const sendBtn = this.shadowRoot.querySelector/**
-                                                    *
-                                                    */
-      ('#sendMessageBtn')
+      const sendBtn = this.shadowRoot.querySelector('#sendMessageBtn')
 
+      /**
+       * An event listener function used when the send message button is clicked.
+       */
       this.eventListernerBtn = () => {
         console.log('---sends message!---')
         this.sendMessage()
       }
       sendBtn.addEventListener('click', this.eventListernerBtn)
 
-      const menuBtn = this.shadowRoot.querySelector/**
-                                                    *
-                                                    */
-      ('#backButton')
+      const menuBtn = this.shadowRoot.querySelector('#backButton')
 
+      /**
+       * An event listener function used when the menu button is clicked.
+       */
       this.eventListenerMenuBtn = () => {
         console.log('Back to menu!')
         // ta bort eventlyssnare
@@ -534,7 +550,9 @@ customElements.define('oe222ez-message-app',
     }
 
     /**
-     * @param e
+     * Method called when the websocket server sends a message.
+     *
+     * @param {object} e - A websocket response.
      */
     onMessage (e) {
       console.log('onMessage')
@@ -550,7 +568,9 @@ customElements.define('oe222ez-message-app',
     }
 
     /**
-     * @param parseData
+     * Adds the new message in the chat window.
+     *
+     * @param {object} parseData - A data object from the websocket server
      */
     displayMessage (parseData) {
       const textElement = document.createElement('p')
@@ -578,7 +598,7 @@ customElements.define('oe222ez-message-app',
     }
 
     /**
-     *
+     * Sends a message to the websocket server.
      */
     sendMessage () {
       console.log('----starts send message ----')
