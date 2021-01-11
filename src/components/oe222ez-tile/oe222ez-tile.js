@@ -55,11 +55,11 @@ template.innerHTML = `
 
 customElements.define('oe222ez-tile',
   /**
-   *
+   * Class represents the custom oe222ez-memory element.
    */
   class extends HTMLElement {
     /**
-     *
+     * Constructs the custom element.
      */
     constructor () {
       super()
@@ -71,23 +71,26 @@ customElements.define('oe222ez-tile',
     }
 
     /**
+     * Observes the custom display attribute.
      *
+     * @returns {Array} - An array with the observed attributes.
      */
     static get observedAttributes () {
       return ['display']
     }
 
-    /**
-     *
-     */
+    /*
     connectedCallback () {
       // this.addEventListener('click', this._tileClicked)
     }
+    */
 
     /**
-     * @param name
-     * @param oldValue
-     * @param newValue
+     * Rotates the tile when the attribute is changed.
+     *
+     * @param {string} name - The name of the attribute.
+     * @param {string} oldValue - The old attribute value.
+     * @param {string} newValue - The new attribute value.
      */
     attributeChangedCallback (name, oldValue, newValue) {
       if (name === 'display') {
@@ -100,12 +103,11 @@ customElements.define('oe222ez-tile',
       }
     }
 
-    /**
-     *
-     */
+    /*
     disconnectedCallback () {
       // this.removeEventListener('click', this._tileClicked)
     }
+    */
 
     /*
     _tileClicked () {
@@ -130,11 +132,11 @@ customElements.define('oe222ez-tile',
     */
 
     /**
-     *
+     * Removes the content of the tile.
      */
     removeTileContent () {
       // removes tile content
-      const removeThis = this.shadowRoot.querySelector('.tile-sides-container').remove()
+      this.shadowRoot.querySelector('.tile-sides-container').remove()
 
       // disables event listener
 
