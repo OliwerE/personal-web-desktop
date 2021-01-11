@@ -441,6 +441,36 @@ customElements.define('oe222ez-memory',
     }
 
     showHighScore () {
+      if (localStorage.getItem('oe222ez-memory') === null) {
+        // bygg hela lagrings strukturen
+        console.error ('hitta inte DATA!')
+        const obj = {
+          "small": [],
+          "medium": [],
+          "large": []
+        }
+
+        console.error('HITTA STORAGE DATA!')
+
+        const stringObj = JSON.stringify(obj)
+
+        localStorage.setItem('oe222ez-memory', stringObj)
+      }
+
+      // väljer resultatobjekt i locstorage:
+      var locStorageScores
+      if (this._memorySize = 4) {
+        locStorageScores = 'small'
+      } else if (this._memorySize = 8) {
+        locStorageScores = 'medium'
+      } else if (this._memorySize = 16) {
+        locStorageScores = 'large'
+      }
+
+      // storage data
+      const scoreObj = JSON.parse(localStorage.getItem('oe222ez-memory'))
+
+      console.log(scoreObj[locStorageScores]) // visar spelstorlekens topplista
       
     }
 
