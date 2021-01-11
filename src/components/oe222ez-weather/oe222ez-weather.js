@@ -153,24 +153,37 @@ weatherData.innerHTML = `
 `
 
 customElements.define('oe222ez-weather',
+  /**
+   *
+   */
   class extends HTMLElement {
-
+    /**
+     *
+     */
     constructor () {
       super()
-
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
     }
 
+    /**
+     *
+     */
     connectedCallback () {
       // lägger till start menu div
-      this.shadowRoot.appendChild(startTemplate.content.cloneNode(true))
+      this.shadowRoot.appendChild/**
+                                  *
+                                  */
+      (startTemplate.content.cloneNode(true))
 
       this.startClick = () => {
         this.searchCity()
       }
-      this.shadowRoot.querySelector('#cityBtn').addEventListener('click', this.startClick)
+      this.shadowRoot.querySelector('#cityBtn').addEventListener/**
+                                                                 * @param e
+                                                                 */
+      ('click', this.startClick)
 
       this.startEnter = (e) => {
         if (e.key === 'Enter') {
@@ -180,6 +193,9 @@ customElements.define('oe222ez-weather',
       this.shadowRoot.querySelector('#citySearch').addEventListener('keypress', this.startEnter)
     }
 
+    /**
+     *
+     */
     disconnectedCallback () {
       if (this.shadowRoot.querySelector('#cityBtn') !== null) {
         this.shadowRoot.querySelector('#cityBtn').removeEventListener('click', this.startClick)
@@ -192,6 +208,9 @@ customElements.define('oe222ez-weather',
       }
     }
 
+    /**
+     *
+     */
     searchCity () {
       if (this.shadowRoot.querySelector('#citySearch').value !== '') {
         this.createLink()
@@ -199,9 +218,11 @@ customElements.define('oe222ez-weather',
       } else {
         this.shadowRoot.querySelector('#response').innerHTML = 'Enter a location!'
       }
-
     }
 
+    /**
+     *
+     */
     createLink () {
       const linkPart1 = 'https://api.openweathermap.org/data/2.5/weather?q='
       const linkPart2 = this.shadowRoot.querySelector('#citySearch').value
@@ -210,6 +231,9 @@ customElements.define('oe222ez-weather',
       this.weatherLink = linkPart1.concat(linkPart2 + linkPart3)
     }
 
+    /**
+     *
+     */
     async getWeather () {
       await window.fetch(this.weatherLink).then((response) => {
         return response.json()
@@ -221,9 +245,12 @@ customElements.define('oe222ez-weather',
       })
     }
 
+    /**
+     *
+     */
     readResponseCode () {
       const responseElement = this.shadowRoot.querySelector('#response')
-      var textToUser
+      let textToUser
       if (this.lastWeatherResponse.cod === 200) {
         this.showResponse() // visar resultat
       } else if (this.lastWeatherResponse.cod === 401) { // denna ska vara number! Something is wrong with the api key
@@ -232,20 +259,16 @@ customElements.define('oe222ez-weather',
 
         // meddelande till användaren
         responseElement.innerHTML = textToUser
-
-
       } else if (this.lastWeatherResponse.cod === '404') { // Requested city not found or an error with the API request
         textToUser = `Location not found err: ${this.lastWeatherResponse.cod}`
         console.error('oe222ez-weather: ', textToUser, ' or an error with the API request!')
         // användaren gjort fel (kan även vara fel på api request)
 
         responseElement.innerHTML = textToUser
-
-
       } else if (this.lastWeatherResponse.cod === '429') { // inte testad! testa innan inlämning!
         textToUser = `Try again later! Err: ${this.lastWeatherResponse.cod}`
         console.error('oe222ez-weather: Ran out of requests! max 60/h', this.lastWeatherResponse.cod)
-        
+
         // meddelande till användaren
         responseElement.innerHTML = textToUser
       } else {
@@ -253,54 +276,61 @@ customElements.define('oe222ez-weather',
         console.error('oe222ez-weather: ', textToUser, ' Got an unknown response code: ', this.lastWeatherResponse.cod)
 
         // meddelande till användaren
-
       }
     }
-    
+
+    /**
+     *
+     */
     showResponse () {
       this.changeToResponseTemplate()
       this.responseTemplateAddText()
     }
 
+    /**
+     *
+     */
     changeToResponseTemplate () {
-            //remove start event listeners
-            this.shadowRoot.querySelector('#cityBtn').removeEventListener('click', this.startClick)
-            this.shadowRoot.querySelector('#citySearch').removeEventListener('keypress', this.startEnter)
-      
-      
-            this.shadowRoot.querySelector('#startMenu').remove() // removes start input
-            this.shadowRoot.appendChild(weatherData.content.cloneNode(true))
-      
-      
-            // add back button event listener
-            this.returnButtonEvent = () => {
-              this.shadowRoot.querySelector('#returnBtn').removeEventListener('click', this.returnButtonEvent)
-              this.restart()
-            }
-      
-            this.shadowRoot.querySelector('#returnBtn').addEventListener('click', this.returnButtonEvent)
+      // remove start event listeners
+      this.shadowRoot.querySelector('#cityBtn').removeEventListener('click', this.startClick)
+      this.shadowRoot.querySelector('#citySearch').removeEventListener('keypress', this.startEnter)
+
+      this.shadowRoot.querySelector('#startMenu').remove() // removes start input
+      this.shadowRoot.appendChild(weatherData.content.cloneNode(true))
+
+      // add back button event listener
+      /**
+       *
+       */
+      this.returnButtonEvent = () => {
+        this.shadowRoot.querySelector('#returnBtn').removeEventListener('click', this.returnButtonEvent)
+        this.restart()
+      }
+
+      this.shadowRoot.querySelector('#returnBtn').addEventListener('click', this.returnButtonEvent)
     }
 
+    /**
+     *
+     */
     responseTemplateAddText () {
-
       this.shadowRoot.querySelector('#responseCity').innerHTML = this.lastWeatherResponse.name // platsens namn
 
       // desc:
       const description = this.shadowRoot.querySelector('#responseDesc').innerHTML = this.lastWeatherResponse.weather[0].description
-      //this.createTextElement(this.lastWeatherResponse.weather[0].description, description)
+      // this.createTextElement(this.lastWeatherResponse.weather[0].description, description)
 
-
-      //img:
+      // img:
       const iconSrc = `https://openweathermap.org/img/wn/${this.lastWeatherResponse.weather[0].icon}.png`
       this.shadowRoot.querySelector('#weatherIcon').setAttribute('src', iconSrc)
 
       // wanted main data
       const wantedMainParameters = ['temp', 'feels_like', 'temp_min', 'temp_max', 'humidity', 'windSpeed']
       for (let i = 0; i < wantedMainParameters.length; i++) {
-        var elementId = this.shadowRoot.querySelector(`#${wantedMainParameters[i]}`)
-        var parameter = wantedMainParameters[i]
-        var parameterResponse = this.lastWeatherResponse.main[parameter] // debug
-        
+        const elementId = this.shadowRoot.querySelector(`#${wantedMainParameters[i]}`)
+        const parameter = wantedMainParameters[i]
+        let parameterResponse = this.lastWeatherResponse.main[parameter] // debug
+
         var text
         if (i < wantedMainParameters.length - 2) { // om det är någon av temperaturerna
           parameterResponse = (parameterResponse - 273.15).toFixed(0) + ' C'
@@ -310,19 +340,18 @@ customElements.define('oe222ez-weather',
         } else if (i === 5) {
           text = `Windspeed: ${this.lastWeatherResponse.wind.speed.toFixed(0)} m/s`
         }
-        
-        var data = document.createTextNode(`${text}`)
+
+        const data = document.createTextNode(`${text}`)
         elementId.appendChild(data)
       }
     }
 
+    /**
+     *
+     */
     restart () { // startar om väder
       this.shadowRoot.querySelector('#weatherResponse').remove()
       this.connectedCallback()
     }
-
-
-    
-
   }
 )

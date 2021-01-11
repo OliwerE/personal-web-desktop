@@ -5,7 +5,6 @@
  * @version 1.0.0
  */
 
-
 const template = document.createElement('template')
 template.innerHTML = `
 <style>
@@ -65,8 +64,13 @@ template.innerHTML = `
  `
 
 customElements.define('oe222ez-pwd',
+  /**
+   *
+   */
   class extends HTMLElement {
-
+    /**
+     *
+     */
     constructor () {
       super()
 
@@ -74,65 +78,88 @@ customElements.define('oe222ez-pwd',
         .appendChild(template.content.cloneNode(true))
     }
 
+    /**
+     *
+     */
     connectedCallback () {
-        this.createEventlisteners()
+      this.createEventlisteners()
     }
 
+    /**
+     *
+     */
     disconnectedCallback () {
-        this.shadowRoot.querySelector('#memoryWindow').removeEventListener('click', this.memoryClick.bind(this))
-        this.shadowRoot.querySelector('#messageWindow').removeEventListener('click', this.messageClick.bind(this))
-        this.shadowRoot.querySelector('#weatherWindow').removeEventListener('click', this.weatherClick.bind(this))
+      this.shadowRoot.querySelector('#memoryWindow').removeEventListener('click', this.memoryClick.bind(this))
+      this.shadowRoot.querySelector('#messageWindow').removeEventListener('click', this.messageClick.bind(this))
+      this.shadowRoot.querySelector('#weatherWindow').removeEventListener('click', this.weatherClick.bind(this))
     }
 
+    /**
+     *
+     */
     createEventlisteners () {
-        // Event elements
-        const memory = this.shadowRoot.querySelector('#memoryWindow')
-        const message = this.shadowRoot.querySelector('#messageWindow')
-        const weather = this.shadowRoot.querySelector('#weatherWindow')
+      // Event elements
+      const memory = this.shadowRoot.querySelector('#memoryWindow')
+      const message = this.shadowRoot.querySelector('#messageWindow')
+      const weather = this.shadowRoot.querySelector('#weatherWindow')
 
-        // Event listeners
-        memory.addEventListener('click', this.memoryClick.bind(this))
-        message.addEventListener('click', this.messageClick.bind(this))
-        weather.addEventListener('click', this.weatherClick.bind(this))
+      // Event listeners
+      memory.addEventListener('click', this.memoryClick.bind(this))
+      message.addEventListener('click', this.messageClick.bind(this))
+      weather.addEventListener('click', this.weatherClick.bind(this))
     }
 
+    /**
+     *
+     */
     createWindow () {
       const element = document.createElement('oe222ez-window')
       const container = this.shadowRoot.querySelector('#windowContainer')
       container.appendChild(element)
     }
 
+    /**
+     * @param newElement
+     */
     addWindowContent (newElement) {
       const newWindow = this.shadowRoot.querySelector('#windowContainer').lastChild.shadowRoot.querySelector('#window')
       newWindow.appendChild(newElement)
     }
 
+    /**
+     *
+     */
     memoryClick () {
       // Window
       this.createWindow()
-  
+
       // Memory component
       const memoryElement = document.createElement('oe222ez-memory')
       this.addWindowContent(memoryElement)
     }
 
+    /**
+     *
+     */
     messageClick () {
       // Window
       this.createWindow()
-  
+
       // message component
       const messageElement = document.createElement('oe222ez-message-app')
       this.addWindowContent(messageElement)
     }
 
+    /**
+     *
+     */
     weatherClick () {
       // Window
       this.createWindow()
-  
+
       // weather component
       const weatherElement = document.createElement('oe222ez-weather')
       this.addWindowContent(weatherElement)
     }
-
   }
 )

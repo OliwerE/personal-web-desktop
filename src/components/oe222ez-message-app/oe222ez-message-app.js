@@ -160,8 +160,13 @@ chatInterface.innerHTML = `
 `
 
 customElements.define('oe222ez-message-app',
+  /**
+   *
+   */
   class extends HTMLElement {
-
+    /**
+     *
+     */
     constructor () {
       super()
 
@@ -175,10 +180,16 @@ customElements.define('oe222ez-message-app',
         .appendChild(template.content.cloneNode(true))
     }
 
+    /**
+     *
+     */
     static get observedAttributes () {
       return []
     }
 
+    /**
+     *
+     */
     connectedCallback () {
       console.log('message started!')
 
@@ -195,8 +206,11 @@ customElements.define('oe222ez-message-app',
         container.appendChild(startTemplate.content.cloneNode(true))
 
         // event lyssnare för knapparna!
+        /**
+         * @param e
+         */
         this.startMenuEvent = (e) => {
-          console.error (e.target.id)
+          console.error(e.target.id)
 
           if (e.target.id === 'allChannels') {
             this.privateChannel = false
@@ -224,36 +238,43 @@ customElements.define('oe222ez-message-app',
           }
         }
 
-        this.shadowRoot.querySelector('#startDiv').addEventListener('click', this.startMenuEvent)
-
+        this.shadowRoot.querySelector('#startDiv').addEventListener/**
+                                                                    * @param e
+                                                                    */
+        ('click', this.startMenuEvent)
 
         this.startPrivateChannelEnter = (e) => {
           if (e.key === 'Enter') {
             this.disconnectedCallback()
             this.startPrivateChannel()
           }
-
         }
 
         this.shadowRoot.querySelector('#privateChannelText').addEventListener('keypress', this.startPrivateChannelEnter)
       }
     }
 
+    /**
+     * @param name
+     * @param oldValue
+     * @param newValue
+     */
     attributeChangedCallback (name, oldValue, newValue) {
-
 
     }
 
+    /**
+     *
+     */
     disconnectedCallback () {
-
-      //start template
+      // start template
       if (this.shadowRoot.querySelector('#startDiv') !== null) {
         this.shadowRoot.querySelector('#startDiv').removeEventListener('click', this.startMenuEvent)
       }
 
       if (this.shadowRoot.querySelector('#privateChannelText') !== null) {
         this.shadowRoot.querySelector('#privateChannelText').removeEventListener('keypress', this.startPrivateChannelEnter)
-      }  
+      }
 
       // ändra namn
 
@@ -268,12 +289,11 @@ customElements.define('oe222ez-message-app',
       // window close event
 
       if (this.closeEvent === true) {
-        setTimeout(() => { //tillfällig lösning!! eventet stängs annars före det stängt anslutningen
+        setTimeout(() => { // tillfällig lösning!! eventet stängs annars före det stängt anslutningen
           this.closeConnection.removeEventListener('oe222ez-window-close', this.windowClosedEvent)
           this.closeEvent = false
-        }, 10);
+        }, 10)
       }
-
 
       // Message template
 
@@ -290,15 +310,20 @@ customElements.define('oe222ez-message-app',
       }
     }
 
+    /**
+     *
+     */
     createUserName () {
       const container = this.shadowRoot.querySelector('#messageAppContainer')
-      container.appendChild(createUserName.content.cloneNode(true))
+      container.appendChild/**
+                            *
+                            */
+      (createUserName.content.cloneNode(true))
 
       this.UsernameListenerFunction = () => {
         // ta bort båda eventlyssnarna!
 
         this.disconnectedCallback() // återställer alla eventlyssnare!
-
 
         console.log('USERNAME CLICK/ENTER')
         const textContent = this.shadowRoot.querySelector('#createNameText').value
@@ -307,7 +332,6 @@ customElements.define('oe222ez-message-app',
         // lägg till username i locstorage
         localStorage.setItem('oe222ez-message-app', textContent)
 
-
         // tar bort create user
         this.shadowRoot.querySelector('#createUserNameContainer').remove()
 
@@ -315,7 +339,10 @@ customElements.define('oe222ez-message-app',
         this.connectedCallback()
       }
 
-      this.shadowRoot.querySelector('#createNameBtn').addEventListener('click', this.UsernameListenerFunction)
+      this.shadowRoot.querySelector('#createNameBtn').addEventListener/**
+                                                                       * @param e
+                                                                       */
+      ('click', this.UsernameListenerFunction)
 
       this.createNameKeypress = (e) => {
         if (e.key === 'Enter') {
@@ -326,9 +353,12 @@ customElements.define('oe222ez-message-app',
       this.shadowRoot.querySelector('#createNameText').addEventListener('keypress', this.createNameKeypress)
     }
 
+    /**
+     *
+     */
     setChannelName () {
-      var channel
-      if(this.channel === '') {
+      let channel
+      if (this.channel === '') {
         channel = 'All channels'
       } else {
         channel = this.channel
@@ -338,6 +368,9 @@ customElements.define('oe222ez-message-app',
       element.appendChild(channelTextNode)
     }
 
+    /**
+     *
+     */
     startPrivateChannel () {
       console.log('starts privateChannel')
       this.privateChannel = true
@@ -347,18 +380,22 @@ customElements.define('oe222ez-message-app',
 
       const chat = this.shadowRoot.querySelector('#messageAppContainer')
       chat.appendChild(chatInterface.content.cloneNode(true))
-      
 
       // display channel
       this.setChannelName()
-
 
       console.log('channel: ', this.channel)
       this.beginWebSocketConnection()
     }
 
+    /**
+     *
+     */
     beginWebSocketConnection () {
-      this.webSocket = new WebSocket('wss://cscloud6-127.lnu.se/socket/')
+      this.webSocket = new WebSocket/**
+                                     * @param e
+                                     */
+      ('wss://cscloud6-127.lnu.se/socket/')
 
       this.webSocket.onopen = (e) => {
         this.webSocketConnection = true
@@ -374,18 +411,23 @@ customElements.define('oe222ez-message-app',
         console.log('---onopen----')
       }
 
+      /**
+       * @param e
+       */
       this.webSocket.onmessage = (e) => {
         console.log('---onmessage----')
         console.log(e)
         console.log('---onmessage----')
         this.onMessage(e)
-
       }
 
+      /**
+       * @param e
+       */
       this.webSocket.onclose = (e) => {
         console.log('---onclose----')
         console.log(e)
-        
+
         /*
         // meddelar användaren att anslutningen är avstängd obs denna räknas inte in i 25 meddelanden!
         const textElement = document.createElement('p')
@@ -398,28 +440,33 @@ customElements.define('oe222ez-message-app',
           this.webSocketConnection = false
 
           const message = {
-            "data": "You have been disconnected!",
-            "username": "The Server"
+            data: 'You have been disconnected!',
+            username: 'The Server'
           }
 
           this.displayMessage(message)
         }
-        
+
         console.log('---onclose----')
       }
 
+      /**
+       * @param e
+       */
       this.webSocket.onerror = (e) => {
         console.log('---onerror----')
         console.error(e)
         console.log('---onerror----')
       }
-        // this.webSocket.close() stänger anslutning
-
+      // this.webSocket.close() stänger anslutning
 
       // lyssnar efter stängd windowkomponent: FLYTTA TILL STARTEVENTLISTENERS!
-      this.closeConnection = this.shadowRoot.host.parentNode.parentNode.host //egna window elementet stängs!
+      this.closeConnection = this.shadowRoot.host.parentNode.parentNode.host // egna window elementet stängs!
       this.closeEvent = true
-      console.error(this.closeConnection)
+      console.error/**
+                    * @param e
+                    */
+      (this.closeConnection)
 
       this.windowClosedEvent = (e) => {
         console.log('message app ser att  window stänger!', e.detail.msg)
@@ -429,18 +476,20 @@ customElements.define('oe222ez-message-app',
 
       this.closeConnection.addEventListener('oe222ez-window-close', this.windowClosedEvent)
 
-
-
-
-        this.startMessageEventlisteners()
+      this.startMessageEventlisteners()
     }
 
+    /**
+     *
+     */
     startMessageEventlisteners () {
-      console.log('----- starts eventlisteners! -----')
-
+      console.log/**
+                  * @param e
+                  */
+      ('----- starts eventlisteners! -----')
 
       this.eventListernerKeypress = (e) => {
-        if(e.key === 'Enter') {
+        if (e.key === 'Enter') {
           console.log('---sends message!---')
           this.sendMessage()
         }
@@ -448,8 +497,10 @@ customElements.define('oe222ez-message-app',
       const textField = this.shadowRoot.querySelector('#sendMessageText')
       textField.addEventListener('keypress', this.eventListernerKeypress)
 
-
-      const sendBtn = this.shadowRoot.querySelector('#sendMessageBtn')
+      const sendBtn = this.shadowRoot.querySelector/**
+                                                    *
+                                                    */
+      ('#sendMessageBtn')
 
       this.eventListernerBtn = () => {
         console.log('---sends message!---')
@@ -457,13 +508,14 @@ customElements.define('oe222ez-message-app',
       }
       sendBtn.addEventListener('click', this.eventListernerBtn)
 
-
-      const menuBtn = this.shadowRoot.querySelector('#backButton')
+      const menuBtn = this.shadowRoot.querySelector/**
+                                                    *
+                                                    */
+      ('#backButton')
 
       this.eventListenerMenuBtn = () => {
         console.log('Back to menu!')
         // ta bort eventlyssnare
-
 
         // stäng anslutning (FIXA: om den inte redan är stängd!)
 
@@ -475,55 +527,59 @@ customElements.define('oe222ez-message-app',
         this.disconnectedCallback()
 
         // börja om
-         this.connectedCallback()
-
+        this.connectedCallback()
       }
 
       menuBtn.addEventListener('click', this.eventListenerMenuBtn)
-
     }
 
+    /**
+     * @param e
+     */
     onMessage (e) {
-     console.log('onMessage')
-     const parseData = JSON.parse(e.data)
+      console.log('onMessage')
+      const parseData = JSON.parse(e.data)
 
-    console.error(parseData)
+      console.error(parseData)
 
-    if (this.privateChannel === false) {
-      this.displayMessage(parseData)
-    } else if (this.privateChannel === true) {
-      if (parseData.channel === this.channel || parseData.type === 'notification')
-      this.displayMessage(parseData)
+      if (this.privateChannel === false) {
+        this.displayMessage(parseData)
+      } else if (this.privateChannel === true) {
+        if (parseData.channel === this.channel || parseData.type === 'notification') { this.displayMessage(parseData) }
+      }
     }
-    }
 
+    /**
+     * @param parseData
+     */
     displayMessage (parseData) {
       const textElement = document.createElement('p')
 
-      var username
+      let username
       if (parseData.username === '') {
-       username = 'Undefined'
+        username = 'Undefined'
       } else if (parseData.username === this.username) { // om det är eget meddelande
         username = 'You'
         textElement.setAttribute('style', 'float: right; background-color: #FDED32;') // eget meddelande
       } else {
         username = parseData.username
       }
- 
+
       textElement.innerHTML = `${username}: ` + parseData.data
       const messageContainer = this.shadowRoot.querySelector('#messages')
       messageContainer.appendChild(textElement)
- 
+
       messageContainer.scrollTop = messageContainer.scrollHeight // visar alltid längst ner i message div
-     
-     if (messageContainer.childNodes.length > 25) {
-       console.log('more than 25 messages! removes first message!')
-       messageContainer.firstChild.remove()
-     }
+
+      if (messageContainer.childNodes.length > 25) {
+        console.log('more than 25 messages! removes first message!')
+        messageContainer.firstChild.remove()
+      }
     }
 
-
-
+    /**
+     *
+     */
     sendMessage () {
       console.log('----starts send message ----')
 
@@ -531,27 +587,23 @@ customElements.define('oe222ez-message-app',
 
       const input = this.shadowRoot.querySelector('#sendMessageText')
 
-      if(input.value !== '') {
+      if (input.value !== '') {
+        const data = {
+          type: 'message',
+          data: input.value,
+          username: this.username,
+          channel: this.channel,
+          key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+        }
 
-      const data = {
-        "type": "message",
-        "data" : input.value,
-        "username": this.username,
-        "channel": this.channel,
-        "key": "eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd"
+        console.error(data) // fel: anv undef!
+
+        this.webSocket.send(JSON.stringify(data)) // skickar data!
+
+        this.shadowRoot.querySelector('#sendMessageText').value = ''
+
+        // ta bort text från input
       }
-
-      console.error(data) // fel: anv undef!
-
-      this.webSocket.send(JSON.stringify(data)) // skickar data!
-
-      this.shadowRoot.querySelector('#sendMessageText').value = ''
-
-      // ta bort text från input
-      
     }
-    }
-    
-
   }
 )
