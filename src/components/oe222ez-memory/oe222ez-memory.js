@@ -1,5 +1,5 @@
 /**
- *
+ * Represents the memory element.
  *
  * @author Oliwer Ellréus <oe222ez@student.lnu.se>
  * @version 1.0.0

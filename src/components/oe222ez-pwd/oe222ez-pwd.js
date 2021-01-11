@@ -65,11 +65,11 @@ template.innerHTML = `
 
 customElements.define('oe222ez-pwd',
   /**
-   *
+   * Class represents the custom oe222ez-pwd element.
    */
   class extends HTMLElement {
     /**
-     *
+     * Constructs the custom element.
      */
     constructor () {
       super()
@@ -79,14 +79,14 @@ customElements.define('oe222ez-pwd',
     }
 
     /**
-     *
+     * Method calls a method that adds event listeners to the dock buttons.
      */
     connectedCallback () {
       this.createEventlisteners()
     }
 
     /**
-     *
+     * Removes the event listeners.
      */
     disconnectedCallback () {
       this.shadowRoot.querySelector('#memoryWindow').removeEventListener('click', this.memoryClick.bind(this))
@@ -95,7 +95,7 @@ customElements.define('oe222ez-pwd',
     }
 
     /**
-     *
+     * Creates the event listeners.
      */
     createEventlisteners () {
       // Event elements
@@ -110,7 +110,7 @@ customElements.define('oe222ez-pwd',
     }
 
     /**
-     *
+     * Creates a new window component in the dom.
      */
     createWindow () {
       const element = document.createElement('oe222ez-window')
@@ -119,7 +119,9 @@ customElements.define('oe222ez-pwd',
     }
 
     /**
-     * @param newElement
+     * Method adds an element into the new window element.
+     *
+     * @param {Element} newElement - An element for the window body.
      */
     addWindowContent (newElement) {
       const newWindow = this.shadowRoot.querySelector('#windowContainer').lastChild.shadowRoot.querySelector('#window')
@@ -127,7 +129,7 @@ customElements.define('oe222ez-pwd',
     }
 
     /**
-     *
+     * Creates a new memory window.
      */
     memoryClick () {
       // Window
@@ -139,7 +141,7 @@ customElements.define('oe222ez-pwd',
     }
 
     /**
-     *
+     * Creates a new Message window.
      */
     messageClick () {
       // Window
@@ -151,7 +153,7 @@ customElements.define('oe222ez-pwd',
     }
 
     /**
-     *
+     * Creates a new weather window.
      */
     weatherClick () {
       // Window
