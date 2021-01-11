@@ -6,8 +6,8 @@
  */
 
 
-const startTemplate = document.createElement('template')
-startTemplate.innerHTML = `
+const styleTemplate = document.createElement('template')
+styleTemplate.innerHTML = `
 <style>
 #memoryStart {
   text-align: center;
@@ -37,21 +37,46 @@ h2 {
 .memorySizeBtns:hover, .memorySizeBtns:focus {
   background-color: #9effff;
 }
-</style>
- <div id="memoryStart">
- <h1>Memory</h1>
-  <div id="memoryStartBtns">
 
-    <button class="memorySizeBtns" id="btnSmall">Small (2x2)</button>
-    <br>
-    <button class="memorySizeBtns" id="btnMedium">Medium (4x2)</button>
-    <br>
-    <button class="memorySizeBtns" id="btnLarge">Large (4x4)</button>
-  </div>
-  <br>
-  <h2>Credits</h2>
-  <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+#highScore {
+  text-align: center;
+}
+
+#highScore table {
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+#highScore td {
+  border: 1px solid;
+  text-alifgn: center;
+  width: 100px;
+}
+
+#menuBtn {
+  margin-top: 10px;
+  width: 100px;
+  height: 30px;
+}
+</style>
+ `
+
+ const startTemplate = document.createElement('template')
+startTemplate.innerHTML = `
+<div id="memoryStart">
+<h1>Memory</h1>
+ <div id="memoryStartBtns">
+
+   <button class="memorySizeBtns" id="btnSmall">Small (2x2)</button>
+   <br>
+   <button class="memorySizeBtns" id="btnMedium">Medium (4x2)</button>
+   <br>
+   <button class="memorySizeBtns" id="btnLarge">Large (4x4)</button>
  </div>
+ <br>
+ <h2>Credits</h2>
+ <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+</div>
  `
 
 const gameTemplate = document.createElement('template')
@@ -59,6 +84,40 @@ gameTemplate.innerHTML = `
 <div id="memory">
 <div id="memoryContainer"></div> 
 <p id="memoryResult"></p>
+</div>
+`
+
+const highScoreTemplate = document.createElement('template')
+highScoreTemplate.innerHTML = `
+<div id="highScore">
+  <h1>Top 5 attempts</h1>
+  <table>
+  <tr>
+    <th>Rank</th>
+    <th>Attempts</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td id="rank1"></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td id="rank2"></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td id="rank3"></td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td id="rank4"></td>
+  </tr>
+   <tr>
+    <td>5</td>
+    <td id="rank5"></td>
+  </tr>
+</table>
+  <button id="menuBtn">Menu</button>
 </div>
 `
 
@@ -75,7 +134,7 @@ customElements.define('oe222ez-memory',
       this.foundPairs = [] // array med hittade par
 
       this.attachShadow({ mode: 'open' })
-        .appendChild(startTemplate.content.cloneNode(true))
+        .appendChild(styleTemplate.content.cloneNode(true))
     }
 
     static get observedAttributes () {
@@ -83,7 +142,7 @@ customElements.define('oe222ez-memory',
     }
 
     connectedCallback () {
-
+      this.shadowRoot.appendChild(startTemplate.content.cloneNode(true))
       /* flytta till annan metod efter vald storlek!
       this.createTiles()
       this.eventListener()
@@ -359,36 +418,30 @@ customElements.define('oe222ez-memory',
     }
 
     memoryFinished () {
-      this.shadowRoot.querySelector('#memoryResult').innerHTML = `Number of Attempts: ${this.attemptCounter}`
-      // skapa reset knapp
 
-      const restartBtn = document.createElement('button')
-      const selector = this.shadowRoot.querySelector('#memory')
+      this.shadowRoot.querySelector('#memory').remove()
 
-      selector.appendChild(restartBtn).setAttribute('id', 'restartMemory')
+      this.shadowRoot.appendChild(highScoreTemplate.content.cloneNode(true))
+
+      this.showHighScore()
 
       this.restartListener = () => {
-        //this.removeListener() // FIXA!
-        
         // tar bort spelet
-        this.shadowRoot.querySelector('#memory').remove()
+        this.shadowRoot.querySelector('#highScore').remove()
 
         // tar bort eventlyssnare
         this.removeListener()
-
-
-        //lägger till ny start
-        this.shadowRoot.appendChild(startTemplate.content.cloneNode(true))
 
         this._createdElements = [] // tar bort skapade element!
         this.foundPairs = [] // återställer hittade tiles
         this.attemptCounter = 0
         this.connectedCallback() // startar om
-
-
       }
+      this.shadowRoot.querySelector('#menuBtn').addEventListener('click', this.restartListener)
+    }
 
-      restartBtn.addEventListener('click', this.restartListener)
+    showHighScore () {
+      
     }
 
   }
