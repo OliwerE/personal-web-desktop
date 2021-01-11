@@ -154,11 +154,11 @@ weatherData.innerHTML = `
 
 customElements.define('oe222ez-weather',
   /**
-   *
+   * Class represents the custom oe222ez-weather element.
    */
   class extends HTMLElement {
     /**
-     *
+     * Constructs the custom element.
      */
     constructor () {
       super()
@@ -168,33 +168,35 @@ customElements.define('oe222ez-weather',
     }
 
     /**
-     *
+     * Adds the start menu in the shadowroot and adds eventlisteners for input and search button.
      */
     connectedCallback () {
       // lägger till start menu div
-      this.shadowRoot.appendChild/**
-                                  *
-                                  */
-      (startTemplate.content.cloneNode(true))
+      this.shadowRoot.appendChild(startTemplate.content.cloneNode(true))
 
+      /**
+       * An event listener function used to search a location.
+       */
       this.startClick = () => {
-        this.searchCity()
+        this.searchLocation()
       }
-      this.shadowRoot.querySelector('#cityBtn').addEventListener/**
-                                                                 * @param e
-                                                                 */
-      ('click', this.startClick)
+      this.shadowRoot.querySelector('#cityBtn').addEventListener('click', this.startClick)
 
+      /**
+       * An event listener function used to search a location when enter is pressed.
+       *
+       * @param {object} e - An event object.
+       */
       this.startEnter = (e) => {
         if (e.key === 'Enter') {
-          this.searchCity()
+          this.searchLocation()
         }
       }
       this.shadowRoot.querySelector('#citySearch').addEventListener('keypress', this.startEnter)
     }
 
     /**
-     *
+     * Removes event listeners.
      */
     disconnectedCallback () {
       if (this.shadowRoot.querySelector('#cityBtn') !== null) {
@@ -209,9 +211,9 @@ customElements.define('oe222ez-weather',
     }
 
     /**
-     *
+     * A method searching a location.
      */
-    searchCity () {
+    searchLocation () {
       if (this.shadowRoot.querySelector('#citySearch').value !== '') {
         this.createLink()
         this.getWeather()
@@ -221,7 +223,7 @@ customElements.define('oe222ez-weather',
     }
 
     /**
-     *
+     * Creates a link for the http request.
      */
     createLink () {
       const linkPart1 = 'https://api.openweathermap.org/data/2.5/weather?q='
@@ -232,7 +234,7 @@ customElements.define('oe222ez-weather',
     }
 
     /**
-     *
+     * Sends a http request to get the current weather.
      */
     async getWeather () {
       await window.fetch(this.weatherLink).then((response) => {
@@ -246,7 +248,7 @@ customElements.define('oe222ez-weather',
     }
 
     /**
-     *
+     * A method reading the response from the api.
      */
     readResponseCode () {
       const responseElement = this.shadowRoot.querySelector('#response')
@@ -280,7 +282,7 @@ customElements.define('oe222ez-weather',
     }
 
     /**
-     *
+     * Displays the response from the api.
      */
     showResponse () {
       this.changeToResponseTemplate()
@@ -288,7 +290,7 @@ customElements.define('oe222ez-weather',
     }
 
     /**
-     *
+     * Changes to the weather data template.
      */
     changeToResponseTemplate () {
       // remove start event listeners
@@ -299,8 +301,9 @@ customElements.define('oe222ez-weather',
       this.shadowRoot.appendChild(weatherData.content.cloneNode(true))
 
       // add back button event listener
+
       /**
-       *
+       * An event listener function used to return to the menu.
        */
       this.returnButtonEvent = () => {
         this.shadowRoot.querySelector('#returnBtn').removeEventListener('click', this.returnButtonEvent)
@@ -311,13 +314,13 @@ customElements.define('oe222ez-weather',
     }
 
     /**
-     *
+     * Method adds text in the weather data template.
      */
     responseTemplateAddText () {
       this.shadowRoot.querySelector('#responseCity').innerHTML = this.lastWeatherResponse.name // platsens namn
 
       // desc:
-      const description = this.shadowRoot.querySelector('#responseDesc').innerHTML = this.lastWeatherResponse.weather[0].description
+      this.shadowRoot.querySelector('#responseDesc').innerHTML = this.lastWeatherResponse.weather[0].description
       // this.createTextElement(this.lastWeatherResponse.weather[0].description, description)
 
       // img:
@@ -331,7 +334,7 @@ customElements.define('oe222ez-weather',
         const parameter = wantedMainParameters[i]
         let parameterResponse = this.lastWeatherResponse.main[parameter] // debug
 
-        var text
+        let text
         if (i < wantedMainParameters.length - 2) { // om det är någon av temperaturerna
           parameterResponse = (parameterResponse - 273.15).toFixed(0) + ' C'
           text = parameter.replace('_', ' ') + ': ' + parameterResponse
@@ -347,7 +350,7 @@ customElements.define('oe222ez-weather',
     }
 
     /**
-     *
+     * Method returns to the menu from the weather response.
      */
     restart () { // startar om väder
       this.shadowRoot.querySelector('#weatherResponse').remove()
