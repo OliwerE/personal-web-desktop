@@ -25,7 +25,7 @@ h2 {
   font-size: 20px;
 }
 
-.memorySizeBtns {
+.memoryBtns {
   width: 125px;
   height: 30px;
   margin-top: 10px;
@@ -34,7 +34,7 @@ h2 {
   border-radius: 20px;
 }
 
-.memorySizeBtns:hover, .memorySizeBtns:focus {
+.memoryBtns:hover, .memoryBtns:focus {
   background-color: #9effff;
 }
 
@@ -67,11 +67,11 @@ startTemplate.innerHTML = `
 <h1>Memory</h1>
  <div id="memoryStartBtns">
 
-   <button class="memorySizeBtns" id="btnSmall">Small (2x2)</button>
+   <button class="memoryBtns" id="btnSmall">Small (2x2)</button>
    <br>
-   <button class="memorySizeBtns" id="btnMedium">Medium (4x2)</button>
+   <button class="memoryBtns" id="btnMedium">Medium (4x2)</button>
    <br>
-   <button class="memorySizeBtns" id="btnLarge">Large (4x4)</button>
+   <button class="memoryBtns" id="btnLarge">Large (4x4)</button>
  </div>
  <br>
  <h2>Credits</h2>
@@ -117,7 +117,7 @@ highScoreTemplate.innerHTML = `
     <td id="rank5"></td>
   </tr>
 </table>
-  <button id="menuBtn">Menu</button>
+  <button class="memoryBtns"  id="menuBtn">Menu</button>
 </div>
 `
 
