@@ -58,6 +58,11 @@ h2 {
   width: 100px;
   height: 30px;
 }
+
+#lastRoundAttempts {
+  margin: 0;
+  margin-top: 5px;
+}
 </style>
  `
 
@@ -117,6 +122,7 @@ highScoreTemplate.innerHTML = `
     <td id="rank5"></td>
   </tr>
 </table>
+  <p id="lastRoundAttempts">Your attempts: </p>
   <button class="memoryBtns"  id="menuBtn">Menu</button>
 </div>
 `
@@ -524,6 +530,10 @@ customElements.define('oe222ez-memory',
         var text = document.createTextNode(thisScore)
         element.appendChild(text)
       }
+
+      // Lägger till spelarens poäng
+      const lastScore = document.createTextNode(this.attemptCounter)
+      this.shadowRoot.querySelector('#lastRoundAttempts').appendChild(lastScore)
     }
 
   }
