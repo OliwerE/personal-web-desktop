@@ -163,16 +163,19 @@ customElements.define('oe222ez-memory',
         if (e.target.id === 'btnSmall') {
           console.log('SMALL')
           this._memorySize = 4
+          this._highScoreList = 4
           //console.error(this._memorySize) // omstart fortf 4
           this.startBoard()
         } else if (e.target.id === 'btnMedium') {
           console.log('MEDIUM')
           this._memorySize = 8
+          this._highScoreList = 8
           //console.error(this._memorySize)
           this.startBoard()
         } else if (e.target.id === 'btnLarge') {
           console.log('LARGE')
           this._memorySize = 16
+          this._highScoreList = 16
           //console.error(this._memorySize)
           this.startBoard()
         } else {
@@ -423,7 +426,7 @@ customElements.define('oe222ez-memory',
 
       this.shadowRoot.appendChild(highScoreTemplate.content.cloneNode(true))
 
-      this.showHighScore()
+      this.getHighScore()
 
       this.restartListener = () => {
         // tar bort spelet
@@ -435,12 +438,13 @@ customElements.define('oe222ez-memory',
         this._createdElements = [] // tar bort skapade element!
         this.foundPairs = [] // återställer hittade tiles
         this.attemptCounter = 0
+        this._highScoreList = null
         this.connectedCallback() // startar om
       }
       this.shadowRoot.querySelector('#menuBtn').addEventListener('click', this.restartListener)
     }
 
-    showHighScore () {
+    getHighScore () {
       if (localStorage.getItem('oe222ez-memory') === null) {
         // bygg hela lagrings strukturen
         console.error ('hitta inte DATA!')
@@ -457,21 +461,69 @@ customElements.define('oe222ez-memory',
         localStorage.setItem('oe222ez-memory', stringObj)
       }
 
+      console.error('-----------------DEUBUG: ', this._highScoreList)
+
       // väljer resultatobjekt i locstorage:
       var locStorageScores
-      if (this._memorySize = 4) {
+      if (this._highScoreList === 4) {
         locStorageScores = 'small'
-      } else if (this._memorySize = 8) {
+        console.error('VALDE: small')
+      } else if (this._highScoreList === 8) {
         locStorageScores = 'medium'
-      } else if (this._memorySize = 16) {
+        console.error('VALDE: medium')
+      } else if (this._highScoreList === 16) {
         locStorageScores = 'large'
+        console.error('VALDE: large')
       }
 
       // storage data
       const scoreObj = JSON.parse(localStorage.getItem('oe222ez-memory'))
+      const currentHighScoreList = scoreObj[locStorageScores]
+      console.log(currentHighScoreList) // visar spelstorlekens topplista
 
-      console.log(scoreObj[locStorageScores]) // visar spelstorlekens topplista
+      currentHighScoreList.push(this.attemptCounter) // lägger till nya score i storlekens lista
       
+      this.addHighScores(scoreObj, locStorageScores)
+    }
+
+    addHighScores (scoreObj, locStorageScores) {
+      var currentHighScoreList = scoreObj[locStorageScores]
+      console.error('HIGHSCORES')
+      console.error(scoreObj)
+      console.error('LISTA: ', locStorageScores)
+      /*
+      console.error(scoreObj)
+      console.error(currentHighScoreList)
+      */
+      //currentHighScoreList = [4, 5, 3, 2 , 1, 8, 11, 20] // test
+
+      const sortedScores = currentHighScoreList.sort(function (a, b) {
+        return a - b
+      })
+
+      scoreObj[locStorageScores] = sortedScores.slice(0, 5)
+      
+      
+      console.error(sortedScores)
+      //console.error(topFiveScores)
+      console.error(currentHighScoreList)
+
+      //nya score datan:
+      localStorage.setItem('oe222ez-memory', JSON.stringify(scoreObj))
+      
+      console.error(scoreObj)
+      console.log('---------------')
+
+      console.log(currentHighScoreList)
+
+      console.log('---------------')
+      for (let i = 0; i < scoreObj[locStorageScores].length; i++) {
+        console.log(i)
+        var thisScore = currentHighScoreList[i]
+        var element = this.shadowRoot.querySelector(`#rank${i + 1}`)
+        var text = document.createTextNode(thisScore)
+        element.appendChild(text)
+      }
     }
 
   }
