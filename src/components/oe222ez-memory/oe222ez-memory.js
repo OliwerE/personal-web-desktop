@@ -160,7 +160,7 @@ customElements.define('oe222ez-memory',
       this.memoryStartBtnClicked = (e) => {
         if (e.target.id === 'btnSmall') {
           this._memorySize = 4
-          this._highScoreList = 4 
+          this._highScoreList = 4
           this.disconnectedCallback() // Removes event listener
           this.startBoard()
         } else if (e.target.id === 'btnMedium') {
@@ -309,7 +309,7 @@ customElements.define('oe222ez-memory',
       }
 
       if (this.lastDetail === newDetail) { // If the same tile is clicked twice
-        return
+
       } else if (this.lastDetail === undefined) { // If the clicked tile is the first tile
         this.shadowRoot.querySelector(`#${newDetail.id}`).setAttribute('display', 'back')
         this.lastDetail = newDetail
@@ -325,7 +325,7 @@ customElements.define('oe222ez-memory',
           // Makes the tiles invisible
           this.shadowRoot.querySelector(`#${this.lastDetail.id}`).removeTileContent()
           this.shadowRoot.querySelector(`#${newDetail.id}`).removeTileContent()
-          
+
           // Removes tabindex
           this.shadowRoot.querySelector(`#${this.lastDetail.id}`).removeAttribute('tabindex')
           this.shadowRoot.querySelector(`#${newDetail.id}`).removeAttribute('tabindex')
@@ -413,7 +413,6 @@ customElements.define('oe222ez-memory',
       // Gets high score from local storage
       const scoreObj = JSON.parse(localStorage.getItem('oe222ez-memory'))
       const currentHighScoreList = scoreObj[locStorageScores]
-
 
       currentHighScoreList.push(this.attemptCounter) // Adds new score to current score array
 
