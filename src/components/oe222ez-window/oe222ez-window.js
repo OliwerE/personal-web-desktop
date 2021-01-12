@@ -74,6 +74,9 @@ customElements.define('oe222ez-window',
 
       this.style.position = 'absolute'
 
+      /**
+       * An eventlistener function used to remove this element.
+       */
       this.eventCloseWindowDiv = () => {
         this.remove()
 
@@ -85,6 +88,12 @@ customElements.define('oe222ez-window',
 
       // Event listeners for the close button
       this.closeElementDiv.addEventListener('click', this.eventCloseWindowDiv)
+
+      /**
+       * An eventlistener function that calls a function when enter is pressed.
+       *
+       * @param {object} e - An event object
+       */
       this.eventCloseWindowEnter = (e) => {
         if (e.key === 'Enter') {
           this.eventCloseWindowDiv()
@@ -97,11 +106,27 @@ customElements.define('oe222ez-window',
       this.windowHeader.addEventListener('mousedown', this.moveWindow.bind(this))
     }
 
-    /*
+    /**
+     * Removes event listeners.
+     */
     disconnectedCallback () {
-      // TA BORT EVENTLYSSNARE!
+      if (this.closeElementDiv !== null) {
+        this.closeElementDiv.removeEventListener('click', this.eventCloseWindowDiv)
+        this.closeElementDiv.removeEventListener('keypress', this.eventCloseWindowEnter)
+      }
+
+      if (this.window !== null) {
+        this.window.removeEventListener('mousedown', this.setHighestZindex.bind(this))
+      }
+
+      if (this.windowHeader !== null) {
+        this.windowHeader.removeEventListener('mousedown', this.moveWindow.bind(this))
+      }
+
+      if (this.headerLeaveEvent === true) { // Removes mouseleave event if active
+        this.windowHeader.removeEventListener('mouseleave', this.headerLeave)
+      }
     }
-    */
 
     /**
      * Method gives this window element the highest z-index.
