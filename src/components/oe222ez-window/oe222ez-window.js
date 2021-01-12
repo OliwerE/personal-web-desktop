@@ -35,7 +35,9 @@ template.innerHTML = `
   font-size: 25px;
   font-weight: bold;
   user-select: none;
+  cursor: pointer;
 }
+
 </style>
 <div id="window">
 <div id="windowHeader"></div>
