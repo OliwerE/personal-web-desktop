@@ -132,10 +132,9 @@ customElements.define('oe222ez-pwd',
      * Creates a new memory window.
      */
     memoryClick () {
-      // Window
       this.createWindow()
 
-      // Memory component
+      // Adds memory element
       const memoryElement = document.createElement('oe222ez-memory')
       this.addWindowContent(memoryElement)
     }
@@ -144,10 +143,9 @@ customElements.define('oe222ez-pwd',
      * Creates a new Message window.
      */
     messageClick () {
-      // Window
       this.createWindow()
 
-      // message component
+      // Adds message Element
       const messageElement = document.createElement('oe222ez-message-app')
       this.addWindowContent(messageElement)
     }
@@ -156,10 +154,9 @@ customElements.define('oe222ez-pwd',
      * Creates a new weather window.
      */
     weatherClick () {
-      // Window
       this.createWindow()
 
-      // weather component
+      // Adds Weather element
       const weatherElement = document.createElement('oe222ez-weather')
       this.addWindowContent(weatherElement)
     }
