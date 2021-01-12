@@ -64,7 +64,6 @@ customElements.define('oe222ez-window',
      * Adds the components event listeners.
      */
     connectedCallback () {
-
       this.style.zIndex = 1 // Default Zindex
       this.setHighestZindex() // Gives this element highest z-index
 
@@ -154,9 +153,9 @@ customElements.define('oe222ez-window',
       document.onmousemove = changeWindowPosition
 
       /**
-       * An eventlisterner function used when the mouse leaves the header with mousedown
+       * An eventlisterner function used when the mouse leaves the header with mousedown.
        */
-      this.headerLeave =  () => {
+      this.headerLeave = () => {
         this.leave = true
 
         /**
@@ -177,7 +176,6 @@ customElements.define('oe222ez-window',
         }, 50)
       }
 
-      
       this.windowHeader.addEventListener('mouseleave', this.headerLeave)
       this.headerLeaveEvent = true
     }
@@ -186,7 +184,7 @@ customElements.define('oe222ez-window',
      * A method used to stop a window from moving.
      */
     disablemoveWindow () {
-      if(this.headerLeaveEvent === true) { // Removes mouseleave event if active
+      if (this.headerLeaveEvent === true) { // Removes mouseleave event if active
         this.windowHeader.removeEventListener('mouseleave', this.headerLeave)
         this.headerLeaveEvent = false
       }
