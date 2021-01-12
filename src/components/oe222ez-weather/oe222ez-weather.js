@@ -171,8 +171,7 @@ customElements.define('oe222ez-weather',
      * Adds the start menu in the shadowroot and adds eventlisteners for input and search button.
      */
     connectedCallback () {
-      // lägger till start menu div
-      this.shadowRoot.appendChild(startTemplate.content.cloneNode(true))
+      this.shadowRoot.appendChild(startTemplate.content.cloneNode(true)) // Adds start menu to the dom
 
       /**
        * An event listener function used to search a location.
@@ -215,8 +214,8 @@ customElements.define('oe222ez-weather',
      */
     searchLocation () {
       if (this.shadowRoot.querySelector('#citySearch').value !== '') {
-        this.createLink()
-        this.getWeather()
+        this.createLink() // Creates request link
+        this.getWeather() // Sends http request
       } else {
         this.shadowRoot.querySelector('#response').innerHTML = 'Enter a location!'
       }
@@ -228,7 +227,7 @@ customElements.define('oe222ez-weather',
     createLink () {
       const linkPart1 = 'https://api.openweathermap.org/data/2.5/weather?q='
       const linkPart2 = this.shadowRoot.querySelector('#citySearch').value
-      const linkPart3 = '&appid=4f844b589b158cb6c66f6c933b7c767c' // använda attribut för api nyckel?
+      const linkPart3 = '&appid=4f844b589b158cb6c66f6c933b7c767c'
 
       this.weatherLink = linkPart1.concat(linkPart2 + linkPart3)
     }
@@ -253,31 +252,24 @@ customElements.define('oe222ez-weather',
     readResponseCode () {
       const responseElement = this.shadowRoot.querySelector('#response')
       let textToUser
-      if (this.lastWeatherResponse.cod === 200) {
-        this.showResponse() // visar resultat
-      } else if (this.lastWeatherResponse.cod === 401) { // denna ska vara number! Something is wrong with the api key
-        textToUser = `Request error: ${this.lastWeatherResponse.cod}`
+      if (this.lastWeatherResponse.cod === 200) { // Got a weather response
+        this.showResponse() // Displays result
+      } else if (this.lastWeatherResponse.cod === 401) { // Error with api key
+        textToUser = 'Request error'
         console.error('oe222ez-weather: Something is wrong with the api key')
-
-        // meddelande till användaren
-        responseElement.innerHTML = textToUser
+        responseElement.innerHTML = textToUser // Message to the user
       } else if (this.lastWeatherResponse.cod === '404') { // Requested city not found or an error with the API request
-        textToUser = `Location not found err: ${this.lastWeatherResponse.cod}`
+        textToUser = 'Location not found'
         console.error('oe222ez-weather: ', textToUser, ' or an error with the API request!')
-        // användaren gjort fel (kan även vara fel på api request)
-
         responseElement.innerHTML = textToUser
-      } else if (this.lastWeatherResponse.cod === '429') { // inte testad! testa innan inlämning!
-        textToUser = `Try again later! Err: ${this.lastWeatherResponse.cod}`
+      } else if (this.lastWeatherResponse.cod === '429') { // Ran out of api key requests
+        textToUser = 'Try again later!'
         console.error('oe222ez-weather: Ran out of requests! max 60/h', this.lastWeatherResponse.cod)
-
-        // meddelande till användaren
         responseElement.innerHTML = textToUser
       } else {
-        textToUser = `Something went wrong! ${this.lastWeatherResponse.cod}`
+        textToUser = 'Something went wrong!'
         console.error('oe222ez-weather: ', textToUser, ' Got an unknown response code: ', this.lastWeatherResponse.cod)
-
-        // meddelande till användaren
+        responseElement.innerHTML = textToUser
       }
     }
 
@@ -293,14 +285,9 @@ customElements.define('oe222ez-weather',
      * Changes to the weather data template.
      */
     changeToResponseTemplate () {
-      // remove start event listeners
-      this.shadowRoot.querySelector('#cityBtn').removeEventListener('click', this.startClick)
-      this.shadowRoot.querySelector('#citySearch').removeEventListener('keypress', this.startEnter)
-
+      this.disconnectedCallback() // Removes event listerners
       this.shadowRoot.querySelector('#startMenu').remove() // removes start input
       this.shadowRoot.appendChild(weatherData.content.cloneNode(true))
-
-      // add back button event listener
 
       /**
        * An event listener function used to return to the menu.
@@ -317,30 +304,32 @@ customElements.define('oe222ez-weather',
      * Method adds text in the weather data template.
      */
     responseTemplateAddText () {
-      this.shadowRoot.querySelector('#responseCity').innerHTML = this.lastWeatherResponse.name // platsens namn
+      // Location
+      const cityName = document.createTextNode(this.lastWeatherResponse.name)
+      this.shadowRoot.querySelector('#responseCity').appendChild(cityName)
 
-      // desc:
-      this.shadowRoot.querySelector('#responseDesc').innerHTML = this.lastWeatherResponse.weather[0].description
-      // this.createTextElement(this.lastWeatherResponse.weather[0].description, description)
+      // Weather description
+      const weatherDesc = document.createTextNode(this.lastWeatherResponse.weather[0].description)
+      this.shadowRoot.querySelector('#responseDesc').appendChild(weatherDesc)
 
-      // img:
+      // Weather icon
       const iconSrc = `https://openweathermap.org/img/wn/${this.lastWeatherResponse.weather[0].icon}.png`
       this.shadowRoot.querySelector('#weatherIcon').setAttribute('src', iconSrc)
 
-      // wanted main data
+      // Adds weather data in the dom
       const wantedMainParameters = ['temp', 'feels_like', 'temp_min', 'temp_max', 'humidity', 'windSpeed']
       for (let i = 0; i < wantedMainParameters.length; i++) {
         const elementId = this.shadowRoot.querySelector(`#${wantedMainParameters[i]}`)
         const parameter = wantedMainParameters[i]
-        let parameterResponse = this.lastWeatherResponse.main[parameter] // debug
+        let parameterResponse = this.lastWeatherResponse.main[parameter]
 
         let text
-        if (i < wantedMainParameters.length - 2) { // om det är någon av temperaturerna
+        if (i < wantedMainParameters.length - 2) { // If the current index is a temperature
           parameterResponse = (parameterResponse - 273.15).toFixed(0) + ' C'
           text = parameter.replace('_', ' ') + ': ' + parameterResponse
-        } else if (i === 4) { // Om det är humidity
+        } else if (i === 4) { // If the current index is humidity
           text = `Humidity: ${parameterResponse} %`
-        } else if (i === 5) {
+        } else if (i === 5) { // If the current index is wind speed
           text = `Windspeed: ${this.lastWeatherResponse.wind.speed.toFixed(0)} m/s`
         }
 
@@ -352,9 +341,9 @@ customElements.define('oe222ez-weather',
     /**
      * Method returns to the menu from the weather response.
      */
-    restart () { // startar om väder
+    restart () {
       this.shadowRoot.querySelector('#weatherResponse').remove()
-      this.connectedCallback()
+      this.connectedCallback() // Starts menu
     }
   }
 )
