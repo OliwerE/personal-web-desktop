@@ -126,6 +126,16 @@ customElements.define('oe222ez-window',
       if (this.headerLeaveEvent === true) { // Removes mouseleave event if active
         this.windowHeader.removeEventListener('mouseleave', this.headerLeave)
       }
+
+      if (this.documentMouseUp === true) {
+        document.removeEventListener('mouseup', this.disablemoveWindow.bind(this))
+        this.documentMouseUp = false
+      }
+
+      if (this.documentMousemove === true) {
+        document.removeEventListener('mousemove', this.changeWindowPosition)
+        this.documentMousemove = false
+      }
     }
 
     /**
@@ -163,7 +173,7 @@ customElements.define('oe222ez-window',
        *
        * @param {object} e - An event object.
        */
-      const changeWindowPosition = (e) => {
+      this.changeWindowPosition = (e) => {
         e.preventDefault()
 
         // Finds window position
@@ -181,9 +191,11 @@ customElements.define('oe222ez-window',
       this.posX1 = e.clientX
       this.posY1 = e.clientY
 
-      document.onmouseup = this.disablemoveWindow
+      document.addEventListener('mouseup', this.disablemoveWindow.bind(this))
+      this.documentMouseUp = true
 
-      document.onmousemove = changeWindowPosition
+      document.addEventListener('mousemove', this.changeWindowPosition)
+      this.documentMousemove = true
 
       /**
        * An eventlisterner function used when the mouse leaves the header with mousedown.
@@ -203,7 +215,8 @@ customElements.define('oe222ez-window',
         setTimeout(() => { // Ignores false mouse leave events
           if (this.leave === true) {
             this.disablemoveWindow()
-            document.onmouseup = null
+            document.removeEventListener('mousemove', this.changeWindowPosition)
+            this.documentMousemove = false
           }
           this.windowHeader.removeEventListener('mouseenter', mouseEnter)
         }, 50)
@@ -221,7 +234,8 @@ customElements.define('oe222ez-window',
         this.windowHeader.removeEventListener('mouseleave', this.headerLeave)
         this.headerLeaveEvent = false
       }
-      document.onmousemove = null
+      document.removeEventListener('mousemove', this.changeWindowPosition)
+      this.documentMousemove = false
     }
   }
 )
