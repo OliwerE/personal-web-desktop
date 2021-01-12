@@ -173,8 +173,6 @@ customElements.define('oe222ez-memory',
           this._highScoreList = 16
           this.disconnectedCallback()
           this.startBoard()
-        } else {
-          console.error('Memory start: Button listener did not find an alternative!')
         }
       }
 

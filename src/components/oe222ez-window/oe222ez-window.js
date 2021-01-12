@@ -74,15 +74,23 @@ customElements.define('oe222ez-window',
 
       this.style.position = 'absolute'
 
-      // Event listener for the close button
-      this.closeElementDiv.addEventListener('click', () => {
+      this.eventCloseWindowDiv = () => {
         this.remove()
 
         // Dispatch event when the window is closed
         this.dispatchEvent(new CustomEvent('oe222ez-window-close', {
           detail: { msg: 'fönster stänger!' }
         }))
-      })
+      }
+
+      // Event listeners for the close button
+      this.closeElementDiv.addEventListener('click', this.eventCloseWindowDiv)
+      this.eventCloseWindowEnter = (e) => {
+        if (e.key === 'Enter') {
+          this.eventCloseWindowDiv()
+        }
+      }
+      this.closeElementDiv.addEventListener('keypress', this.eventCloseWindowEnter)
 
       this.window.addEventListener('mousedown', this.setHighestZindex.bind(this))
 
