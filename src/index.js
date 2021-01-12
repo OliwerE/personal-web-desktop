@@ -11,10 +11,3 @@ import './components/oe222ez-memory/'
 import './components/oe222ez-message-app'
 import './components/oe222ez-weather/'
 import './components/oe222ez-pwd/index'
-
-/*
-const element = document.createElement('oe222ez-window')
-const messageElement = document.createElement('oe222ez-message-app')
-element.shadowRoot.querySelector('#window').appendChild(messageElement)
-document.querySelector('body').appendChild(element)
-*/
