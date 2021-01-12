@@ -34,7 +34,7 @@ template.innerHTML = `
   text-align: center;
   font-size: 25px;
   font-weight: bold;
-
+  user-select: none;
 }
 </style>
 <div id="window">
