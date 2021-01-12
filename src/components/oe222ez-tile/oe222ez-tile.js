@@ -44,18 +44,14 @@ template.innerHTML = `
 </style>
 
   <div class="tile-sides-container">
-    <div class="tile-front">
-      <!--FRONT-->
-    </div>
-    <div class="tile-back">
-    <!--BACK-->
-    </div>
+    <div class="tile-front"></div>
+    <div class="tile-back"></div>
   </div>
 `
 
 customElements.define('oe222ez-tile',
   /**
-   * Class represents the custom oe222ez-memory element.
+   * Class represents the custom oe222ez-tile element.
    */
   class extends HTMLElement {
     /**
@@ -63,8 +59,6 @@ customElements.define('oe222ez-tile',
      */
     constructor () {
       super()
-
-      this.display = 'front'
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
@@ -79,12 +73,6 @@ customElements.define('oe222ez-tile',
       return ['display']
     }
 
-    /*
-    connectedCallback () {
-      // this.addEventListener('click', this._tileClicked)
-    }
-    */
-
     /**
      * Rotates the tile when the attribute is changed.
      *
@@ -94,53 +82,19 @@ customElements.define('oe222ez-tile',
      */
     attributeChangedCallback (name, oldValue, newValue) {
       if (name === 'display') {
-        if (newValue === 'front') { // fix vad som händer om this.display är lika med newvalue!
-          this.display = newValue
-          this.shadowRoot.querySelector('.tile-sides-container').style.transform = 'rotateY(0deg)'
+        if (newValue === 'front') {
+          this.shadowRoot.querySelector('.tile-sides-container').style.transform = 'rotateY(0deg)' // Displays the front side of the tile
         } else if (newValue === 'back') {
-          this.shadowRoot.querySelector('.tile-sides-container').style.transform = 'rotateY(180deg)'
+          this.shadowRoot.querySelector('.tile-sides-container').style.transform = 'rotateY(180deg)' // Displays the back side of the tile
         }
       }
     }
-
-    /*
-    disconnectedCallback () {
-      // this.removeEventListener('click', this._tileClicked)
-    }
-    */
-
-    /*
-    _tileClicked () {
-
-      // vänder tile
-      this.shadowRoot.querySelector('.tile-sides-container').style.transform = 'rotateY(180deg)'
-
-      // tile click event
-
-      this.dispatchEvent(new CustomEvent('oe222ez-tile-clicked', {
-        bubbles: true,
-        detail: { class: this.className, id: this.id }
-      }))
-
-    }
-
-    resetTile () {
-      console.log('resets tile: ', this.id)
-
-        this.shadowRoot.querySelector('.tile-sides-container').style.transform = 'rotateY(0deg)'
-    }
-    */
 
     /**
      * Removes the content of the tile.
      */
     removeTileContent () {
-      // removes tile content
       this.shadowRoot.querySelector('.tile-sides-container').remove()
-
-      // disables event listener
-
-      // this.removeEventListener('click', this._tileClicked)
     }
   }
 )
