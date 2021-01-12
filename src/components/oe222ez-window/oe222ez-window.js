@@ -56,40 +56,31 @@ customElements.define('oe222ez-window',
     constructor () {
       super()
 
-      this.windowElement = undefined
-
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
     }
-
-    /*
-    static get observedAttributes () {
-      return ['windowElement']
-    }
-    */
 
     /**
      * Adds the components event listeners.
      */
     connectedCallback () {
-      console.log('A window component added to dom!')
 
       this.style.zIndex = 1 // Default Zindex
-      this.setHighestZindex() // fönsterkomponenten får högsta z-index
+      this.setHighestZindex() // Gives this element highest z-index
 
-      // Element som används i komponenten
+      // Elements used in this component
       this.window = this.shadowRoot.querySelector('#window')
       this.windowHeader = this.shadowRoot.querySelector('#windowHeader')
       this.closeElementDiv = this.shadowRoot.querySelector('#closeWindowBtn')
 
       this.style.position = 'absolute'
 
-      // event lyssnare för stäng knappen
+      // Event listener for the close button
       this.closeElementDiv.addEventListener('click', () => {
         this.remove()
 
+        // Dispatch event when the window is closed
         this.dispatchEvent(new CustomEvent('oe222ez-window-close', {
-          bubbles: true, // behövs bubbles??
           detail: { msg: 'fönster stänger!' }
         }))
       })
@@ -98,16 +89,6 @@ customElements.define('oe222ez-window',
 
       this.windowHeader.addEventListener('mousedown', this.moveWindow.bind(this))
     }
-
-    /*
-    attributeChangedCallback (name, oldValue, newValue) {
-      if (name === 'windowElement') { // kontrollera att detta är ett element:  <namn>
-        console.log('window edit!')
-        this.windowElement = newValue
-        this.addElementToWindow()
-      }
-    }
-    */
 
     /*
     disconnectedCallback () {
@@ -119,21 +100,13 @@ customElements.define('oe222ez-window',
      * Method gives this window element the highest z-index.
      */
     setHighestZindex () {
-      console.log('Nuvarane zindex: ', this.style.zIndex)
-
-      // skapar en array med alla element i domen
+      // Creates array with all window elements
       const zIndexarray = Array.from(this.shadowRoot.host.parentNode.querySelectorAll('oe222ez-window'))
 
-      console.log(zIndexarray)
-
-      // loopar igenom alla window element och loggar
+      // Creates array with all z-index values
       const allZIndex = []
       for (let i = 0; i < zIndexarray.length; i++) {
-        console.log(i)
         const zIndexNumber = parseInt(zIndexarray[i].style.zIndex)
-
-        console.log('loop: ', zIndexNumber)
-
         allZIndex.push(zIndexNumber)
       }
 
@@ -141,17 +114,8 @@ customElements.define('oe222ez-window',
         return a - b
       })
 
-      console.error(sortedZIndex)
-
-      const newZIndexRequired = sortedZIndex[allZIndex.length - 1] + 1
-
-      // console.log('nya zindex för att vara övers: ', newZIndexRequired)
-
-      // fixa: öka inte z index om samma element väljs igen!
-
+      const newZIndexRequired = sortedZIndex[allZIndex.length - 1] + 1 // The new required z-index
       this.style.zIndex = newZIndexRequired
-
-      console.log('nya z-index', this.style.zIndex)
     }
 
     /**
@@ -160,8 +124,7 @@ customElements.define('oe222ez-window',
      * @param {object} e - An event object.
      */
     moveWindow (e) {
-      e.preventDefault() // stoppar markering av text i andra fönster
-      // funktionen används när musen flyttas'
+      e.preventDefault()
 
       /**
        * Function moves the window element to the new position.
@@ -169,37 +132,31 @@ customElements.define('oe222ez-window',
        * @param {object} e - An event object.
        */
       const changeWindowPosition = (e) => {
-        // console.log('changes position!')
-        e.preventDefault() // stoppar markering av text i andra fönster
+        e.preventDefault()
 
+        // Finds window position
         this.posX2 = this.posX1 - e.clientX
         this.posY2 = this.posY1 - e.clientY
         this.posX1 = e.clientX
         this.posY1 = e.clientY
 
-        // console.log(this.posX2, this.posY2)
-
-        // ändrar fönster div positionen
+        // Changes window location
         this.window.style.left = Math.max(this.parentNode.offsetLeft, Math.min((this.window.offsetLeft - this.posX2), (this.parentNode.offsetWidth - this.window.offsetWidth))) + 'px'
         this.window.style.top = Math.max(this.parentNode.offsetTop, Math.min((this.window.offsetTop - this.posY2), (this.parentNode.offsetHeight - this.window.offsetHeight))) + 'px'
       }
+
+      // First window position
       this.posX1 = e.clientX
       this.posY1 = e.clientY
 
-      // Hantera mouseup:
-      document.onmouseup = this.disablemoveWindow // gör om till event
-      // flyttar elementet:
-      document.onmousemove = changeWindowPosition // gör om till event
+      document.onmouseup = this.disablemoveWindow
 
-      /*
-      this.windowHeader.addEventListener('mouseleave', () => { // FIXA: mouseleave på window headern fungerar inte
-        console.error('Move stopped!')
-        this.disablemoveWindow()
-        document.onmouseup = null
-      })
-      */
+      document.onmousemove = changeWindowPosition
 
-      this.windowHeader.addEventListener('mouseleave', () => { // stäng av denna i disablemoveWindow !!
+      /**
+       * An eventlisterner function used when the mouse leaves the header with mousedown
+       */
+      this.headerLeave =  () => {
         this.leave = true
 
         /**
@@ -211,35 +168,29 @@ customElements.define('oe222ez-window',
 
         this.windowHeader.addEventListener('mouseenter', mouseEnter)
 
-        setTimeout(() => {
-          console.error(this.leave)
+        setTimeout(() => { // Ignores false mouse leave events
           if (this.leave === true) {
-            console.error('Move stopped!')
             this.disablemoveWindow()
             document.onmouseup = null
-          } else {
-            console.error('did not leave!')
           }
-
           this.windowHeader.removeEventListener('mouseenter', mouseEnter)
         }, 50)
-      })
+      }
+
+      
+      this.windowHeader.addEventListener('mouseleave', this.headerLeave)
+      this.headerLeaveEvent = true
     }
 
     /**
      * A method used to stop a window from moving.
      */
     disablemoveWindow () {
+      if(this.headerLeaveEvent === true) { // Removes mouseleave event if active
+        this.windowHeader.removeEventListener('mouseleave', this.headerLeave)
+        this.headerLeaveEvent = false
+      }
       document.onmousemove = null
     }
-
-    /* ANVÄNDS EJ??
-    addElementToWindow () {
-      const element = document.createElement(this.windowElement)
-      const slot = this.shadowRoot.querySelector('#window')
-
-      slot.appendChild(element)
-    }
-    */
   }
 )
