@@ -11,11 +11,12 @@ template.innerHTML = `
 :host {
     position: relative;
     perspective: 600px;
-    width: 98px;
-    height: 98px;
+    width: 95px;
+    height: 95px;
     float: left;
-    border: 1px solid;
     cursor: pointer;
+    margin-left: 3px;
+    margin-bottom: 3px;
 }
 
 .tile-front {
