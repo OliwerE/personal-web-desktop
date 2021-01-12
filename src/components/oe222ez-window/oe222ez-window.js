@@ -47,11 +47,11 @@ template.innerHTML = `
 
 customElements.define('oe222ez-window',
   /**
-   *
+   * Class represents the custom oe222ez-window element.
    */
   class extends HTMLElement {
     /**
-     *
+     * Constructs the custom element.
      */
     constructor () {
       super()
@@ -62,15 +62,14 @@ customElements.define('oe222ez-window',
         .appendChild(template.content.cloneNode(true))
     }
 
-    /**
-     *
-     */
+    /*
     static get observedAttributes () {
       return ['windowElement']
     }
+    */
 
     /**
-     *
+     * Adds the components event listeners.
      */
     connectedCallback () {
       console.log('A window component added to dom!')
@@ -100,11 +99,7 @@ customElements.define('oe222ez-window',
       this.windowHeader.addEventListener('mousedown', this.moveWindow.bind(this))
     }
 
-    /**
-     * @param name
-     * @param oldValue
-     * @param newValue
-     */
+    /*
     attributeChangedCallback (name, oldValue, newValue) {
       if (name === 'windowElement') { // kontrollera att detta är ett element:  <namn>
         console.log('window edit!')
@@ -112,16 +107,16 @@ customElements.define('oe222ez-window',
         this.addElementToWindow()
       }
     }
+    */
 
-    /**
-     *
-     */
+    /*
     disconnectedCallback () {
-
+      // TA BORT EVENTLYSSNARE!
     }
+    */
 
     /**
-     *
+     * Method gives this window element the highest z-index.
      */
     setHighestZindex () {
       console.log('Nuvarane zindex: ', this.style.zIndex)
@@ -160,13 +155,18 @@ customElements.define('oe222ez-window',
     }
 
     /**
-     * @param e
+     * Method used to move the window element.
+     *
+     * @param {object} e - An event object.
      */
     moveWindow (e) {
       e.preventDefault() // stoppar markering av text i andra fönster
       // funktionen används när musen flyttas'
+
       /**
-       * @param e
+       * Function moves the window element to the new position.
+       *
+       * @param {object} e - An event object.
        */
       const changeWindowPosition = (e) => {
         // console.log('changes position!')
@@ -203,7 +203,7 @@ customElements.define('oe222ez-window',
         this.leave = true
 
         /**
-         *
+         * An event listener function that sets leave to false when the mouse enters the window header.
          */
         const mouseEnter = () => {
           this.leave = false
@@ -227,20 +227,19 @@ customElements.define('oe222ez-window',
     }
 
     /**
-     *
+     * A method used to stop a window from moving.
      */
     disablemoveWindow () {
       document.onmousemove = null
     }
 
-    /**
-     *
-     */
+    /* ANVÄNDS EJ??
     addElementToWindow () {
       const element = document.createElement(this.windowElement)
       const slot = this.shadowRoot.querySelector('#window')
 
       slot.appendChild(element)
     }
+    */
   }
 )
