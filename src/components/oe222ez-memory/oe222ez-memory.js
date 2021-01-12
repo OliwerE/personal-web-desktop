@@ -437,7 +437,6 @@ customElements.define('oe222ez-memory',
 
       // Adds top five scores in a table
       for (let i = 0; i < scoreObj[locStorageScores].length; i++) {
-        console.log(i)
         const thisScore = currentHighScoreList[i]
         const element = this.shadowRoot.querySelector(`#rank${i + 1}`)
         const text = document.createTextNode(thisScore)
