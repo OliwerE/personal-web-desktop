@@ -34,6 +34,7 @@ template.innerHTML = `
   width: 100%;
   height: 100%;
   position: absolute;
+  backface-visibility: hidden;
 }
 
 .tile-sides-container {

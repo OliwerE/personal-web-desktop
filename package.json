@@ -45,5 +45,8 @@
     "devOptions": {
       "bundle": false
     }
+  },
+  "dependencies": {
+    "netlify-cli": "^17.16.3"
   }
 }
